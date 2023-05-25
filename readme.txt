@@ -7,7 +7,7 @@ Requires PHP: 7.4
 Stable Tag: 1.0.0
 Version: 1.0.0
 License: GPLv3
-License URI: https://www.gnu.org/licenses/gpl-3.0.tr.html
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 == Description ==
 
