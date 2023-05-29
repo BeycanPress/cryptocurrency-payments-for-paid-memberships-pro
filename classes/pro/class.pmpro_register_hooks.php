@@ -50,6 +50,7 @@ class PMPro_Register_Hooks
 
                     $level->price = floatval($discountPrice);
                     $level->initial_payment = $level->price;
+                    $level->billing_amount  = $level->price;
                 }
             }
 

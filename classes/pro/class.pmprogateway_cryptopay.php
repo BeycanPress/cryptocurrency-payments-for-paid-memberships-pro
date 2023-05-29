@@ -2,12 +2,12 @@
 
 require_once PMPRO_DIR . '/classes/gateways/class.pmprogateway.php';
 
-add_action('init', ['PMProGateway_CryptoPay', 'init']);
+add_action('init', ['PMProGateway_cryptopay', 'init']);
 
 use \BeycanPress\CryptoPay\Services;
 use \BeycanPress\CryptoPay\PluginHero\Hook;
 
-class PMProGateway_CryptoPay extends PMProGateway 
+class PMProGateway_cryptopay extends PMProGateway 
 {
     /**
      * @param string $gateway
@@ -26,18 +26,18 @@ class PMProGateway_CryptoPay extends PMProGateway
             add_filter('pmpro_skip_account_fields', '__return_true');
         } 
         
-        add_filter('pmpro_gateways', ['PMProGateway_CryptoPay', 'pmpro_gateways']);
-        add_filter('pmpro_payment_options', ['PMProGateway_CryptoPay', 'pmpro_payment_options']);
-        add_filter('pmpro_required_billing_fields', ['PMProGateway_CryptoPay', 'pmpro_required_billing_fields']);
+        add_filter('pmpro_gateways', ['PMProGateway_cryptopay', 'pmpro_gateways']);
+        add_filter('pmpro_payment_options', ['PMProGateway_cryptopay', 'pmpro_payment_options']);
+        add_filter('pmpro_required_billing_fields', ['PMProGateway_cryptopay', 'pmpro_required_billing_fields']);
 
         if (pmpro_getOption('gateway') == 'cryptopay') {
             add_filter('pmpro_billing_show_payment_method', '__return_false');
             add_filter('pmpro_include_billing_address_fields', '__return_false');
             add_filter('pmpro_include_payment_information_fields', '__return_false');
-            add_action('pmpro_checkout_default_submit_button', ['PMProGateway_CryptoPay', 'pmpro_checkout']);
+            add_action('pmpro_checkout_default_submit_button', ['PMProGateway_cryptopay', 'pmpro_checkout']);
         }
 
-        add_action('wp_enqueue_scripts', ['PMProGateway_CryptoPay', 'pmpro_load_scripts']);
+        add_action('wp_enqueue_scripts', ['PMProGateway_cryptopay', 'pmpro_load_scripts']);
 	}
 
     /**

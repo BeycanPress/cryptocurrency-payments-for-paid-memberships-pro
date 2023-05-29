@@ -45,8 +45,9 @@ class PMPro_Register_Hooks_Lite
 
                     $discountPrice = $wpdb->get_var("SELECT initial_payment  FROM $wpdb->pmpro_discount_codes_levels WHERE code_id = '" . esc_sql($discountId) . "' LIMIT 1");
 
-                    $level->initial_payment = floatval($discountPrice);
-                    $level->billing_amount  = floatval($discountPrice);
+                    $level->price = floatval($discountPrice);
+                    $level->initial_payment = $level->price;
+                    $level->billing_amount  = $level->price;
                 }
             }
 
