@@ -70,5 +70,13 @@ add_action('plugins_loaded', function() {
 			require_once __DIR__ . '/classes/lite/class.pmpro_register_hooks.php';
 			require_once __DIR__ . '/classes/lite/class.pmprogateway_cryptopay.php';
 		}
+	} else {
+		add_action('admin_notices', function () {
+			?>
+				<div class="notice notice-error">
+					<p><?php echo sprintf(esc_html__('Paid Memberships Pro - CryptoPay Gateway: This plugin is an extra feature plugin so it cannot do anything on its own. It needs CryptoPay to work. You can buy CryptoPay by %s.', 'pmpro-cryptopay'), '<a href="https://beycanpress.com/product/cryptopay-all-in-one-cryptocurrency-payments-for-wordpress/?utm_source=wp_org_addons" target="_blank">'.esc_html__('clicking here', 'pmpro-cryptopay').'</a>'); ?></p>
+				</div>
+			<?php
+		});
 	}
 });
