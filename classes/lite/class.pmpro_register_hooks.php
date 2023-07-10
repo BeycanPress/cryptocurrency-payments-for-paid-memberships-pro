@@ -1,6 +1,7 @@
 <?php
 
 use \BeycanPress\CryptoPayLite\Loader;
+use \BeycanPress\CryptoPayLite\Services;
 use \BeycanPress\CryptoPayLite\PluginHero\Hook;
 use \BeycanPress\CryptoPayLite\Pages\TransactionPage;
 
@@ -9,11 +10,14 @@ class PMPro_Register_Hooks_Lite
     public function __construct()
     {
         if (class_exists(Loader::class)) {
+
+            Services::registerAddon('pmpro');
+            
             if (is_admin()) {
                 new TransactionPage(
                     esc_html__('PMPro transactions', 'cryptopay'),
-                    'lite_pmpro_transactions',
-                    'lite_pmpro',
+                    'pmpro_transactions',
+                    'pmpro',
                     9,
                     [
                         'orderId' => function($tx) {
@@ -25,11 +29,11 @@ class PMPro_Register_Hooks_Lite
                 );
             }
             
-            Hook::addAction('check_order_lite_pmpro', function(object $order) {
+            Hook::addAction('init_pmpro', function(object $data) {
                 global $pmpro_levels;
 
-                if (!isset($pmpro_levels[$order->id])) {
-                    Response::error(esc_html__('The relevant level was not found!', 'pmpro-cryptopay'), 'ORDER_NOT_FOUND');
+                if (!isset($pmpro_levels[$data->params->pmpro->levelId])) {
+                    Response::error(esc_html__('The relevant level was not found!', 'pmpro-cryptopay'), 'LEVEL_NOT_FOUND');
                 }
             });
 
@@ -51,12 +55,12 @@ class PMPro_Register_Hooks_Lite
                 }
             }
 
-            Hook::addAction('payment_started_lite_pmpro', function(object $data) {
+            Hook::addAction('payment_started_pmpro', function(object $data) {
                 global $pmpro_levels;
                 $currentUser = wp_get_current_user();
                 
                 $order = new \MemberOrder();
-                $level = $pmpro_levels[$data->order->id];
+                $level = $pmpro_levels[$data->params->pmpro->levelId];
                 pmpro_check_discount_code_lite($data->order, $level);
 
                 if(empty($order->code)) {
@@ -117,7 +121,7 @@ class PMPro_Register_Hooks_Lite
                 $data->model->update(['orderId' => $order->id], ['hash' => $data->hash]);
             });
 
-            Hook::addAction('payment_finished_lite_pmpro', function(object $data) {
+            Hook::addAction('payment_finished_pmpro', function(object $data) {
                 global $pmpro_levels, $wpdb;
 
                 $orderId = ($data->model->findOneBy(['hash' => $data->hash]))->orderId;
@@ -132,7 +136,7 @@ class PMPro_Register_Hooks_Lite
                     return;
                 }
 
-                $level = $pmpro_levels[$data->order->id];
+                $level = $pmpro_levels[$data->params->pmpro->levelId];
                 pmpro_check_discount_code_lite($data->order, $level);
 
                 $startdate = current_time( "mysql" );
@@ -185,9 +189,9 @@ class PMPro_Register_Hooks_Lite
                 $order->saveOrder();
             });
             
-            Hook::addFilter('payment_redirect_urls_lite_pmpro', function(object $data) {
+            Hook::addFilter('payment_redirect_urls_pmpro', function(object $data) {
                 return [
-                    'success' => pmpro_url("confirmation", "?level=" . $data->order->id),
+                    'success' => pmpro_url("confirmation", "?level=" . $data->params->pmpro->levelId),
                     'failed' => pmpro_url("account")
                 ];
             });

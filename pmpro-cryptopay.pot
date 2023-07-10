@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Paid Memberships Pro - CryptoPay Gateway\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 06:24+0000\n"
+"POT-Creation-Date: 2023-07-10 17:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "BeycanPress"
 msgstr ""
 
-#: index.php:77
+#: index.php:113
 msgid "clicking here"
 msgstr ""
 
@@ -32,7 +32,7 @@ msgstr ""
 msgid "CryptoPay"
 msgstr ""
 
-#: classes/lite/class.pmprogateway_cryptopay.php:50
+#: classes/lite/class.pmprogateway_cryptopay_lite.php:51
 msgid "CryptoPay Lite"
 msgstr ""
 
@@ -45,8 +45,8 @@ msgid "https://beycanpress.com/cryptopay"
 msgstr ""
 
 #: classes/class.pmpro_ajax_api.php:33
-#: classes/lite/class.pmpro_register_hooks.php:41
-#: classes/pro/class.pmpro_register_hooks.php:44
+#: classes/lite/class.pmpro_register_hooks.php:45
+#: classes/pro/class.pmpro_register_hooks.php:45
 msgid "Invalid discount code!"
 msgstr ""
 
@@ -54,13 +54,8 @@ msgstr ""
 msgid "Invalid level id!"
 msgstr ""
 
-#: classes/lite/class.pmprogateway_cryptopay.php:112
+#: classes/lite/class.pmprogateway_cryptopay_lite.php:113
 #: classes/pro/class.pmprogateway_cryptopay.php:112
-msgid "Level ID:"
-msgstr ""
-
-#: classes/lite/class.pmprogateway_cryptopay.php:113
-#: classes/pro/class.pmprogateway_cryptopay.php:113
 msgid "Level price:"
 msgstr ""
 
@@ -68,7 +63,7 @@ msgstr ""
 msgid "Paid Memberships Pro - CryptoPay Gateway"
 msgstr ""
 
-#: index.php:77
+#: index.php:113
 #, php-format
 msgid ""
 "Paid Memberships Pro - CryptoPay Gateway: This plugin is an extra feature "
@@ -76,12 +71,12 @@ msgid ""
 "can buy CryptoPay by %s."
 msgstr ""
 
-#: classes/lite/class.pmprogateway_cryptopay.php:148
-#: classes/pro/class.pmprogateway_cryptopay.php:148
+#: classes/lite/class.pmprogateway_cryptopay_lite.php:151
+#: classes/pro/class.pmprogateway_cryptopay.php:150
 msgid "Please wait..."
 msgstr ""
 
-#: classes/lite/class.pmpro_register_hooks.php:32
-#: classes/pro/class.pmpro_register_hooks.php:35
+#: classes/lite/class.pmpro_register_hooks.php:36
+#: classes/pro/class.pmpro_register_hooks.php:36
 msgid "The relevant level was not found!"
 msgstr ""

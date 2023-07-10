@@ -10,8 +10,9 @@ class PMPro_Register_Hooks
     public function __construct()
     {
         if (class_exists(Loader::class)) {
-            Services::registerAddon('pmpro');
 
+            Services::registerAddon('pmpro');
+            
             if (is_admin()) {
                 new TransactionPage(
                     esc_html__('PMPro transactions', 'cryptopay'),
@@ -28,11 +29,11 @@ class PMPro_Register_Hooks
                 );
             }
             
-            Hook::addAction('check_order_pmpro', function(object $order) {
+            Hook::addAction('init_pmpro', function(object $data) {
                 global $pmpro_levels;
 
-                if (!isset($pmpro_levels[$order->id])) {
-                    Response::error(esc_html__('The relevant level was not found!', 'pmpro-cryptopay'), 'ORDER_NOT_FOUND');
+                if (!isset($pmpro_levels[$data->params->pmpro->levelId])) {
+                    Response::error(esc_html__('The relevant level was not found!', 'pmpro-cryptopay'), 'LEVEL_NOT_FOUND');
                 }
             });
 
@@ -59,7 +60,7 @@ class PMPro_Register_Hooks
                 $currentUser = wp_get_current_user();
                 
                 $order = new \MemberOrder();
-                $level = $pmpro_levels[$data->order->id];
+                $level = $pmpro_levels[$data->params->pmpro->levelId];
                 pmpro_check_discount_code($data->order, $level);
 
                 if(empty($order->code)) {
@@ -135,7 +136,7 @@ class PMPro_Register_Hooks
                     return;
                 }
 
-                $level = $pmpro_levels[$data->order->id];
+                $level = $pmpro_levels[$data->params->pmpro->levelId];
                 pmpro_check_discount_code($data->order, $level);
 
                 $startdate = current_time( "mysql" );
@@ -190,7 +191,7 @@ class PMPro_Register_Hooks
             
             Hook::addFilter('payment_redirect_urls_pmpro', function(object $data) {
                 return [
-                    'success' => pmpro_url("confirmation", "?level=" . $data->order->id),
+                    'success' => pmpro_url("confirmation", "?level=" . $data->params->pmpro->levelId),
                     'failed' => pmpro_url("account")
                 ];
             });

@@ -73,7 +73,7 @@ class PMProGateway_cryptopay extends PMProGateway
     {
         return array_merge(self::getGatewayOptions(), $options);
     }
-    
+
     /**
      * @param array $fields
      * @return array
@@ -109,15 +109,17 @@ class PMProGateway_cryptopay extends PMProGateway
             <div id="PMProCryptoPayWrapper">
                 <?php
                     Hook::addFilter('lang', function($lang) {
-                        $lang['orderId']     = __('Level ID:', 'pmpro-cryptopay');
                         $lang['orderAmount'] = __('Level price:', 'pmpro-cryptopay');
                         return $lang;
                     });
                     echo Services::startPaymentProcess([
-                        'id' => (int) $pmpro_level->id,
                         'amount' => (float) $pmpro_level->initial_payment,
                         'currency' => strtoupper(pmpro_getOption('currency'))
-                    ], 'pmpro');
+                    ], 'pmpro', true, [
+                        'pmpro' => [
+                            'levelId' => (int) $pmpro_level->id
+                        ]
+                    ]);
                 ?>
             </div>
             <?php

@@ -14,7 +14,8 @@ class PMProGateway_cryptopay_lite extends PMProGateway
      */
     public function __construct(?string $gateway = null) 
     {
-		return parent::__construct($gateway);
+        $this->gateway = $gateway;
+        return $this->gateway;
 	}
 
     /**
@@ -78,7 +79,7 @@ class PMProGateway_cryptopay_lite extends PMProGateway
      * @param array $fields
      * @return array
      */
-	static function pmpro_required_billing_fields(array $fields) : array
+	public static function pmpro_required_billing_fields(array $fields) : array
     {
 		unset($fields['bfirstname']);
 		unset($fields['blastname']);
@@ -109,15 +110,17 @@ class PMProGateway_cryptopay_lite extends PMProGateway
             <div id="PMProCryptoPayWrapper">
                 <?php
                     Hook::addFilter('lang', function($lang) {
-                        $lang['orderId']     = __('Level ID:', 'pmpro-cryptopay');
                         $lang['orderAmount'] = __('Level price:', 'pmpro-cryptopay');
                         return $lang;
                     });
                     echo Services::startPaymentProcess([
-                        'id' => (int) $pmpro_level->id,
                         'amount' => (float) $pmpro_level->initial_payment,
                         'currency' => strtoupper(pmpro_getOption('currency'))
-                    ], 'lite_pmpro');
+                    ], 'pmpro', true, [
+                        'pmpro' => [
+                            'levelId' => (int) $pmpro_level->id
+                        ]
+                    ]);
                 ?>
             </div>
             <?php

@@ -4,8 +4,8 @@ Tags: Bitcoin, Ethereum, Binance Smart Chain, Blockchain, Networks, Cryptocurren
 Requires at least: 5.0
 Tested up to: 6.2.2
 Requires PHP: 7.4
-Stable Tag: 1.0.0
-Version: 1.0.0
+Stable Tag: 1.0.1
+Version: 1.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -36,10 +36,13 @@ You can easily translate with Loco translate.
 == Installation ==
 
 1. Upload the entire `/cryptocurrency-payments-for-paid-memberships-pro` directory to the `/wp-content/plugins/` directory.
-2. Activate CryptoPay Lite through the 'Plugins' menu in WordPress.
+2. Activate Paid Memberships Pro - CryptoPay Gateway through the 'Plugins' menu in WordPress.
 3. Enjoy.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed: Some problems
 
 = 1.0.0 =
 * Plugin released.
