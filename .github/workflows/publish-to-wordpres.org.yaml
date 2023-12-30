@@ -1,0 +1,94 @@
+name: Publish to WordPress.org
+
+on:
+  workflow_run:
+    workflows: ["Create auto release"]
+    types:
+      - completed
+    branches:
+      - master
+  release:
+    types:
+      - published
+    branches:
+      - master
+
+env:
+  PLUGIN_SLUG: cryptocurrency-payments-for-paid-memberships-pro
+
+jobs:
+  deploy_to_wp_org:
+    permissions: write-all
+    name: WordPress.org Plugin Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check auto release
+      id: check_auto_release
+      run: |
+        if [[ "${{ github.event.workflow.name }}" != 'Create auto release' ]]; then
+          echo "::set-output name=should_run::true"
+          exit 0
+        else
+          if [[ "${{ github.event.workflow_run.conclusion }}" != 'success' ]]; then
+            echo "::set-output name=should_run::false"
+            exit 0
+          fi
+          version_message="${{ github.event.workflow_run.head_commit.message }}"
+          if [[ ! "$version_message" =~ ^([0-9]+\.){2}[0-9]+$ ]]; then
+            echo "Invalid version format."
+            echo "::set-output name=should_run::false"
+            exit 0
+          fi
+        fi
+        
+        echo "::set-output name=should_run::true"
+      shell: bash
+
+    - name: Checkout repository
+      if: ${{ steps.check_auto_release.outputs.should_run == 'true' }}
+      uses: actions/checkout@master
+
+    - name: Deploy to WordPress.org
+      id: deploy
+      if: ${{ steps.check_auto_release.outputs.should_run == 'true' }}
+      uses: sultann/action-plugin-deploy@master
+      with:
+        svn_username: ${{ secrets.WORDPRESS_ORG_USERNAME }}
+        svn_password: ${{ secrets.WORDPRESS_ORG_PASSWORD }}
+        svn_slug: ${{ env.PLUGIN_SLUG }}
+    
+    - name: Use existing or create and upload Zip
+      if: ${{ steps.check_auto_release.outputs.should_run == 'true' }}
+      run: |
+        RELEASE_ZIP_NAME="${{ env.PLUGIN_SLUG }}.zip"
+        
+        cd ${{ steps.deploy.outputs.svn_path }}
+
+        cd /tmp/svn
+        cp -r trunk/ "${{ env.PLUGIN_SLUG }}/"
+        zip -r $RELEASE_ZIP_NAME "${{ env.PLUGIN_SLUG }}"
+
+        latest_release_id=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+        "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r '.id')
+
+        upload_url=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+        -H "Content-Type: application/json" \
+        "https://api.github.com/repos/${{ github.repository }}/releases/${latest_release_id}" | jq -r '.upload_url')
+
+        upload_url="${upload_url%\{*}" # Remove the query parameters from upload_url
+
+        curl -X POST \
+        -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+        -H "Content-Type: application/zip" \
+        --data-binary @"$RELEASE_ZIP_NAME" \
+        "$upload_url?name=$RELEASE_ZIP_NAME"
+
+    #  Working one
+    # - name: WordPress Plugin Deploy
+    #   uses: 10up/action-wordpress-plugin-deploy@stable
+    #   with:
+    #     generate-zip: true
+    #   env:
+    #     SVN_PASSWORD: ${{ secrets.WORDPRESS_ORG_USERNAME }}
+    #     SVN_USERNAME: ${{ secrets.WORDPRESS_ORG_PASSWORD }}
+    #     SLUG: ${{ env.PLUGIN_SLUG }} 
