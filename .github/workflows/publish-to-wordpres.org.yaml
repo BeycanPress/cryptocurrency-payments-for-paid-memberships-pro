@@ -91,4 +91,4 @@ jobs:
     #   env:
     #     SVN_PASSWORD: ${{ secrets.WORDPRESS_ORG_USERNAME }}
     #     SVN_USERNAME: ${{ secrets.WORDPRESS_ORG_PASSWORD }}
-    #     SLUG: ${{ env.PLUGIN_SLUG }} 
+    #     SLUG: ${{ env.PLUGIN_SLUG }}
