@@ -1,12 +1,6 @@
 name: Publish to WordPress.org
 
 on:
-  workflow_run:
-    workflows: ["Create auto release"]
-    types:
-      - completed
-    branches:
-      - master
   release:
     types:
       - published
@@ -20,51 +14,27 @@ jobs:
   deploy_to_wp_org:
     permissions: write-all
     name: WordPress.org Plugin Deploy
-    if: ${{ github.event.workflow.name != 'Create auto release' || ( github.event.workflow.name == 'Create auto release' && github.event.workflow_run.conclusion == 'success' ) }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@master
 
-    - name: Deploy to WordPress.org
+    - name: WordPress Plugin Deploy
       id: deploy
-      uses: sultann/action-plugin-deploy@master
+      uses: 10up/action-wordpress-plugin-deploy@stable
       with:
-        svn_username: ${{ secrets.WORDPRESS_ORG_USERNAME }}
-        svn_password: ${{ secrets.WORDPRESS_ORG_PASSWORD }}
-        svn_slug: ${{ env.PLUGIN_SLUG }}
+        generate-zip: true
+      env:
+        SVN_PASSWORD: ${{ secrets.WORDPRESS_ORG_PASSWORD }}
+        SVN_USERNAME: ${{ secrets.WORDPRESS_ORG_USERNAME }}
+        SLUG: ${{ env.PLUGIN_SLUG }}
     
-    - name: Use existing or create and upload Zip
-      run: |
-        RELEASE_ZIP_NAME="${{ env.PLUGIN_SLUG }}.zip"
-        
-        cd ${{ steps.deploy.outputs.svn_path }}
-
-        cd /tmp/svn
-        cp -r trunk/ "${{ env.PLUGIN_SLUG }}/"
-        zip -r $RELEASE_ZIP_NAME "${{ env.PLUGIN_SLUG }}"
-
-        latest_release_id=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-        "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r '.id')
-
-        upload_url=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-        -H "Content-Type: application/json" \
-        "https://api.github.com/repos/${{ github.repository }}/releases/${latest_release_id}" | jq -r '.upload_url')
-
-        upload_url="${upload_url%\{*}" # Remove the query parameters from upload_url
-
-        curl -X POST \
-        -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-        -H "Content-Type: application/zip" \
-        --data-binary @"$RELEASE_ZIP_NAME" \
-        "$upload_url?name=$RELEASE_ZIP_NAME"
-
-    #  Working one
-    # - name: WordPress Plugin Deploy
-    #   uses: 10up/action-wordpress-plugin-deploy@stable
-    #   with:
-    #     generate-zip: true
-    #   env:
-    #     SVN_PASSWORD: ${{ secrets.WORDPRESS_ORG_USERNAME }}
-    #     SVN_USERNAME: ${{ secrets.WORDPRESS_ORG_PASSWORD }}
-    #     SLUG: ${{ env.PLUGIN_SLUG }}
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ${{ steps.deploy.outputs.zip-path }}
+        asset_name: ${{ env.PLUGIN_SLUG }}.zip
+        asset_content_type: application/zip
