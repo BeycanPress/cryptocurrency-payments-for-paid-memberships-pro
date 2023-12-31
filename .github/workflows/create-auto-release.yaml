@@ -33,6 +33,6 @@ jobs:
       with:
         tag_name: ${{ steps.extract_version.outputs.version }}
         release_name: Version ${{ steps.extract_version.outputs.version }}
-        body: Version v${{ steps.extract_version.outputs.version }}
+        body: Version ${{ steps.extract_version.outputs.version }}
         draft: false
         prerelease: false
