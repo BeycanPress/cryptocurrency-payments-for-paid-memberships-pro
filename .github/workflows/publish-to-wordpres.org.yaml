@@ -6,12 +6,12 @@ on:
     types:
       - completed
     branches:
-      - main
+      - master
   release:
     types:
       - published
     branches:
-      - main
+      - master
 
 env:
   PLUGIN_SLUG: cryptocurrency-payments-for-paid-memberships-pro
