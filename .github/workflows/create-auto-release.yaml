@@ -1,6 +1,9 @@
 name: Create auto release
 
-on: workflow_dispatch
+on: 
+  push:
+    branches:
+      - master
 
 jobs:
   auto_release:
