@@ -15,17 +15,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@master
 
-    - name: Check for Tag
+    - name: Check if release already exists
       run: |
-        if git show-ref --tags --verify --quiet "refs/tags/${{ github.ref_name }}"; then
-          echo "TAG_EXIST=true" >> $GITHUB_ENV
-        else
-          echo "TAG_EXIST=false" >> $GITHUB_ENV
-        fi
+        RELEASE_EXISTS=$(git ls-remote --exit-code --tags origin "${{ github.ref_name }}" | wc -l)
+        echo "RELEASE_EXISTS=$RELEASE_EXISTS" >> $GITHUB_ENV
+
 
     - name: Create Release
       id: create_release
-      if: env.TAG_EXIST == 'false'
+      if: env.RELEASE_EXISTS == 'false'
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
