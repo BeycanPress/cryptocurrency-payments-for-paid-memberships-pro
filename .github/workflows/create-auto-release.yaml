@@ -23,10 +23,10 @@ jobs:
         else
           echo "RELEASE_EXISTS=true" >> $GITHUB_ENV
         fi
-
+        
     - name: Create Release
       id: create_release
-      if: ${{ env.RELEASE_EXISTS == 0 }}
+      if: ${{ env.RELEASE_EXISTS == 'false' }}
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
