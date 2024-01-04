@@ -17,12 +17,13 @@ jobs:
 
     - name: Check if release already exists
       run: |
-        RELEASE_EXISTS=$(git ls-remote --exit-code --tags origin "${{ github.ref_name }}" | wc -l)
+        TAG_NAME=${{ github.ref_name }}
+        RELEASE_EXISTS=$(git ls-remote --exit-code --tags origin "$TAG_NAME^{}" | wc -l)
         echo "RELEASE_EXISTS=$RELEASE_EXISTS" >> $GITHUB_ENV
 
     - name: Create Release
       id: create_release
-      if: env.RELEASE_EXISTS == '0'
+      if: ${{ env.RELEASE_EXISTS == 0 }}
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
