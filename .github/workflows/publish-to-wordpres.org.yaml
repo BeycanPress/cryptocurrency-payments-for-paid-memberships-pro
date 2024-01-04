@@ -6,11 +6,6 @@ on:
       - Create auto release
     types:
       - completed
-  release:
-    types:
-      - released
-    branches:
-      - master
 
 env:
   PLUGIN_SLUG: cryptocurrency-payments-for-paid-memberships-pro

@@ -15,8 +15,26 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@master
 
+    - name: Check if tag exists
+      id: check_tag
+      uses: actions/github-script@v4
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { Octokit } = require("@octokit/core");
+          const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+
+          const tagExists = await octokit.request('GET /repos/{owner}/{repo}/git/ref/{ref}', {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: 'tags/' + process.env.GITHUB_REF
+          }).then(response => true).catch(err => false);
+          
+          return tagExists;
+
     - name: Create Release
       id: create_release
+      if: steps.check_tag.outputs.result == 'false'
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
