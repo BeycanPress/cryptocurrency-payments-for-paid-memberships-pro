@@ -1,32 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
+// @phpcs:disable PSR1.Files.SideEffects
+// @phpcs:disable Generic.Files.InlineHTML
+// @phpcs:disable Generic.Files.LineLength
+// @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+
 require_once PMPRO_DIR . '/classes/gateways/class.pmprogateway.php';
 
 add_action('init', ['PMProGateway_cryptopay_lite', 'init']);
 
-use \BeycanPress\CryptoPayLite\Services;
-use \BeycanPress\CryptoPayLite\PluginHero\Hook;
+use BeycanPress\CryptoPayLite\Services;
+use BeycanPress\CryptoPayLite\PluginHero\Hook;
 
-class PMProGateway_cryptopay_lite extends PMProGateway 
+// @phpcs:ignore
+class PMProGateway_cryptopay_lite extends PMProGateway
 {
     /**
      * @param string $gateway
      */
-    public function __construct(?string $gateway = null) 
+    public function __construct(?string $gateway = null)
     {
-        $this->gateway = $gateway;
-        return $this->gateway;
-	}
+        return parent::__construct($gateway);
+    }
 
     /**
      * @return void
      */
-	public static function init() 
+    public static function init(): void
     {
         if (!is_user_logged_in()) {
             add_filter('pmpro_skip_account_fields', '__return_true');
-        } 
-        
+        }
+
         add_filter('pmpro_gateways', ['PMProGateway_cryptopay_lite', 'pmpro_gateways']);
         add_filter('pmpro_payment_options', ['PMProGateway_cryptopay_lite', 'pmpro_payment_options']);
         add_filter('pmpro_required_billing_fields', ['PMProGateway_cryptopay_lite', 'pmpro_required_billing_fields']);
@@ -39,25 +46,25 @@ class PMProGateway_cryptopay_lite extends PMProGateway
         }
 
         add_action('wp_enqueue_scripts', ['PMProGateway_cryptopay_lite', 'pmpro_load_scripts']);
-	}
+    }
 
     /**
-     * @param array $gateways
-     * @return array
+     * @param array<string,string> $gateways
+     * @return array<string,string>
      */
-    public static function pmpro_gateways(array $gateways) : array
+    public static function pmpro_gateways(array $gateways): array
     {
-		if (empty($gateways['cryptopay_lite'])) {
-			$gateways['cryptopay_lite'] = __('CryptoPay Lite', 'pmpro-cryptopay');
-		}
+        if (empty($gateways['cryptopay_lite'])) {
+            $gateways['cryptopay_lite'] = __('CryptoPay Lite', 'pmpro-cryptopay');
+        }
 
-		return $gateways;
-	}
+        return $gateways;
+    }
 
     /**
-     * @return array
+     * @return array<string>
      */
-    public static function getGatewayOptions() : array
+    public static function getGatewayOptions(): array
     {
         return [
             'currency',
@@ -67,41 +74,41 @@ class PMProGateway_cryptopay_lite extends PMProGateway
     }
 
     /**
-     * @param array $options
-     * @return array
+     * @param array<string> $options
+     * @return array<string>
      */
-    public static function pmpro_payment_options(array $options) : array
+    public static function pmpro_payment_options(array $options): array
     {
         return array_merge(self::getGatewayOptions(), $options);
     }
-    
+
     /**
-     * @param array $fields
-     * @return array
+     * @param array<string,mixed> $fields
+     * @return array<string,mixed>
      */
-	public static function pmpro_required_billing_fields(array $fields) : array
+    public static function pmpro_required_billing_fields(array $fields): array
     {
-		unset($fields['bfirstname']);
-		unset($fields['blastname']);
-		unset($fields['baddress1']);
-		unset($fields['bcity']);
-		unset($fields['bstate']);
-		unset($fields['bzipcode']);
-		unset($fields['bphone']);
-		unset($fields['bemail']);
-		unset($fields['bcountry']);
-		unset($fields['CardType']);
-		unset($fields['AccountNumber']);
-		unset($fields['ExpirationMonth']);
-		unset($fields['ExpirationYear']);
-		unset($fields['CVV']);
-		return $fields;
-	}
+        unset($fields['bfirstname']);
+        unset($fields['blastname']);
+        unset($fields['baddress1']);
+        unset($fields['bcity']);
+        unset($fields['bstate']);
+        unset($fields['bzipcode']);
+        unset($fields['bphone']);
+        unset($fields['bemail']);
+        unset($fields['bcountry']);
+        unset($fields['CardType']);
+        unset($fields['AccountNumber']);
+        unset($fields['ExpirationMonth']);
+        unset($fields['ExpirationYear']);
+        unset($fields['CVV']);
+        return $fields;
+    }
 
     /**
      * @return void
      */
-    public static function pmpro_checkout()
+    public static function pmpro_checkout(): void
     {
         global $gateway, $pmpro_level, $discount_code;
 
@@ -109,7 +116,7 @@ class PMProGateway_cryptopay_lite extends PMProGateway
             ?>
             <div id="PMProCryptoPayWrapper">
                 <?php
-                    Hook::addFilter('lang', function($lang) {
+                    Hook::addFilter('lang', function ($lang) {
                         $lang['orderAmount'] = __('Level price:', 'pmpro-cryptopay');
                         return $lang;
                     });
@@ -125,9 +132,9 @@ class PMProGateway_cryptopay_lite extends PMProGateway
             </div>
             <?php
         } else {
-            $discount_code_link = !empty($discount_code) ? '&discount_code=' . $discount_code : ''; 
+            $discount_code_link = !empty($discount_code) ? '&discount_code=' . $discount_code : '';
             ?>
-            <span class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_checkout-h3-msg' ) ); ?>"><?php esc_html_e('Already have an account?', 'paid-memberships-pro' );?> <a href="<?php echo esc_url( wp_login_url( apply_filters( 'pmpro_checkout_login_redirect', pmpro_url("checkout", "?level=" . $pmpro_level->id . $discount_code_link) ) ) ); ?>"><?php esc_html_e('Log in here', 'paid-memberships-pro' );?></a></span>
+            <span class="<?php echo esc_attr(pmpro_get_element_class('pmpro_checkout-h3-msg')); ?>"><?php esc_html_e('Already have an account?', 'paid-memberships-pro'); ?> <a href="<?php echo esc_url(wp_login_url(apply_filters('pmpro_checkout_login_redirect', pmpro_url("checkout", "?level=" . $pmpro_level->id . $discount_code_link)))); ?>"><?php esc_html_e('Log in here', 'paid-memberships-pro');?></a></span>
             <?php
         }
     }
@@ -135,7 +142,7 @@ class PMProGateway_cryptopay_lite extends PMProGateway
     /**
      * @return void
      */
-    public static function pmpro_load_scripts() : void
+    public static function pmpro_load_scripts(): void
     {
         wp_enqueue_script(
             'pmpro_cryptopay_main_js',
