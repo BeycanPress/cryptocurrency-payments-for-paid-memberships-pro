@@ -4,8 +4,8 @@ Tags: Bitcoin, Ethereum, Binance Smart Chain, Blockchain, Networks, Cryptocurren
 Requires at least: 5.0
 Tested up to: 6.4.2
 Requires PHP: 7.4
-Stable Tag: 1.0.3
-Version: 1.0.3
+Stable Tag: 1.0.4
+Version: 1.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 

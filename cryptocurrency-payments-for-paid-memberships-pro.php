@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 /**
  * Plugin Name: Paid Memberships Pro - CryptoPay Gateway
- * Version:     1.0.3
- * Plugin URI:  https://beycanpress.com/cryptopay
+ * Version:     1.0.4
+ * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
  * Author:      BeycanPress LLC
  * Author URI:  https://beycanpress.com
@@ -20,7 +20,7 @@ declare(strict_types=1);
  * Tags: Cryptopay, Cryptocurrency, WooCommerce, WordPress, MetaMask, Trust, Binance, Wallet, Ethereum, Bitcoin, Binance smart chain, Payment, Plugin, Gateway, Moralis, Converter, API, coin market cap, CMC
  * Requires at least: 5.0
  * Tested up to: 6.4.2
- * Requires PHP: 7.4
+ * Requires PHP: 8.1
 */
 
 use BeycanPress\CryptoPay\Loader;
@@ -29,7 +29,7 @@ use BeycanPress\CryptoPayLite\Loader as LiteLoader;
 use BeycanPress\CryptoPayLite\PluginHero\Hook as LiteHook;
 
 define('PMPRO_CRYPTOPAY_FILE', __FILE__);
-define('PMPRO_CRYPTOPAY_VERSION', '1.0.3');
+define('PMPRO_CRYPTOPAY_VERSION', '1.0.4');
 define('PMPRO_CRYPTOPAY_URL', plugin_dir_url(__FILE__));
 
 register_activation_hook(PMPRO_CRYPTOPAY_FILE, function (): void {

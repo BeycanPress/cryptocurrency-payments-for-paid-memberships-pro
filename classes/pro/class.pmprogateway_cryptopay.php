@@ -11,8 +11,11 @@ require_once PMPRO_DIR . '/classes/gateways/class.pmprogateway.php';
 
 add_action('init', ['PMProGateway_cryptopay', 'init']);
 
-use BeycanPress\CryptoPay\Services;
+use BeycanPress\CryptoPay\Helpers;
+use BeycanPress\CryptoPay\Payment;
 use BeycanPress\CryptoPay\PluginHero\Hook;
+use BeycanPress\CryptoPay\Types\Order\OrderType;
+use BeycanPress\CryptoPay\Types\Transaction\ParamsType;
 
 // @phpcs:ignore
 class PMProGateway_cryptopay extends PMProGateway
@@ -44,8 +47,6 @@ class PMProGateway_cryptopay extends PMProGateway
             add_filter('pmpro_include_payment_information_fields', '__return_false');
             add_action('pmpro_checkout_default_submit_button', ['PMProGateway_cryptopay', 'pmpro_checkout']);
         }
-
-        add_action('wp_enqueue_scripts', ['PMProGateway_cryptopay', 'pmpro_load_scripts']);
     }
 
     /**
@@ -120,14 +121,18 @@ class PMProGateway_cryptopay extends PMProGateway
                         $lang['orderAmount'] = __('Level price:', 'pmpro-cryptopay');
                         return $lang;
                     });
-                    echo Services::startPaymentProcess([
+                    echo (new Payment('pmpro'))
+                    ->setOrder(OrderType::fromArray([
                         'amount' => (float) $pmpro_level->initial_payment,
                         'currency' => strtoupper(pmpro_getOption('currency'))
-                    ], 'pmpro', true, [
-                        'pmpro' => [
-                            'levelId' => (int) $pmpro_level->id
-                        ]
-                    ]);
+                    ]))
+                    ->setParams(ParamsType::fromArray([
+                        'levelId' => (int) $pmpro_level->id
+                    ]))
+                    ->setAutoStart(false)
+                    ->html(loading:true);
+
+                    self::pmpro_load_scripts();
                 ?>
             </div>
             <?php
@@ -144,19 +149,21 @@ class PMProGateway_cryptopay extends PMProGateway
      */
     public static function pmpro_load_scripts(): void
     {
-        wp_enqueue_script(
-            'pmpro_cryptopay_main_js',
-            PMPRO_CRYPTOPAY_URL . 'assets/js/main.js',
-            ['jquery'],
-            PMPRO_CRYPTOPAY_VERSION,
-            true
-        );
-        wp_localize_script('pmpro_cryptopay_main_js', 'PMProCryptoPay', [
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('pmpro_cryptopay_use_discount'),
-            'lang' => [
-                'pleaseWait' => __('Please wait...', 'pmpro-cryptopay'),
-            ]
-        ]);
+        if (!wp_script_is('pmpro_cryptopay_main')) {
+            wp_enqueue_script(
+                'pmpro_cryptopay_main',
+                PMPRO_CRYPTOPAY_URL . 'assets/js/main.js',
+                ['jquery', Helpers::getProp('mainJsKey')],
+                PMPRO_CRYPTOPAY_VERSION,
+                true
+            );
+            wp_localize_script('pmpro_cryptopay_main', 'PMProCryptoPay', [
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('pmpro_cryptopay_use_discount'),
+                'lang' => [
+                    'pleaseWait' => __('Please wait...', 'pmpro-cryptopay'),
+                ]
+            ]);
+        }
     }
 }

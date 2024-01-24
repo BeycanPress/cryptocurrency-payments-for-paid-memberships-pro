@@ -10,6 +10,7 @@ use BeycanPress\CryptoPay\Loader;
 use BeycanPress\CryptoPay\Helpers;
 use BeycanPress\CryptoPay\PluginHero\Hook;
 use BeycanPress\CryptoPay\Pages\TransactionPage;
+use BeycanPress\CryptoPay\Types\Data\PaymentDataType;
 
 // @phpcs:ignore
 class PMPro_Register_Hooks
@@ -29,18 +30,20 @@ class PMPro_Register_Hooks
                     9,
                     [
                         'orderId' => function ($tx) {
+                            if (!isset($tx->orderId)) {
+                                return esc_html__('Not found', 'pmpro-cryptopay');
+                            }
+
                             return '<a href="' . admin_url('admin.php?page=pmpro-orders&order=' . $tx->orderId) . '">' . $tx->orderId . '</a>';
                         }
-                    ],
-                    true,
-                    ['updatedAt']
+                    ]
                 );
             }
 
             Hook::addFilter('init_pmpro', function (object $data) {
                 global $pmpro_levels;
 
-                if (!isset($pmpro_levels[$data->params->pmpro->levelId])) {
+                if (!isset($pmpro_levels[$data->getParams()->get('levelId')])) {
                     Response::error(esc_html__('The relevant level was not found!', 'pmpro-cryptopay'), 'LEVEL_NOT_FOUND');
                 }
 
@@ -48,20 +51,20 @@ class PMPro_Register_Hooks
             });
 
             /**
-             * @param object $order
              * @param object $level
+             * @param string|null $discountCode
              * @return void
              */
-            function pmpro_check_discount_code(object $order, object &$level): void
+            function pmpro_check_discount_code(object &$level, ?string $discountCode = null): void
             {
-                global $wpdb;
-                if (isset($order->discountCode)) {
-                    $codeCheck = pmpro_checkDiscountCode($order->discountCode, $level->id, true);
+                if ($discountCode) {
+                    global $wpdb;
+                    $codeCheck = pmpro_checkDiscountCode($discountCode, $level->id, true);
                     if ($codeCheck[0] == false) {
                         Response::error(esc_html__('Invalid discount code!', 'pmpro-cryptopay'));
                     }
 
-                    $discountId = $wpdb->get_var("SELECT id FROM $wpdb->pmpro_discount_codes WHERE code = '" . esc_sql($order->discountCode) . "' LIMIT 1");
+                    $discountId = $wpdb->get_var("SELECT id FROM $wpdb->pmpro_discount_codes WHERE code = '" . esc_sql($discountCode) . "' LIMIT 1");
 
                     $discountPrice = $wpdb->get_var("SELECT initial_payment  FROM $wpdb->pmpro_discount_codes_levels WHERE code_id = '" . esc_sql($discountId) . "' LIMIT 1");
 
@@ -71,13 +74,13 @@ class PMPro_Register_Hooks
                 }
             }
 
-            Hook::addAction('payment_started_pmpro', function (object $data): void {
+            Hook::addAction('before_payment_started_pmpro', function (PaymentDataType $data): PaymentDataType {
                 global $pmpro_levels;
                 $currentUser = wp_get_current_user();
 
                 $order = new \MemberOrder();
-                $level = $pmpro_levels[$data->params->pmpro->levelId];
-                pmpro_check_discount_code($data->order, $level);
+                $level = $pmpro_levels[$data->getParams()->get('levelId')];
+                pmpro_check_discount_code($level, $data->getParams()->get('discountCode'));
 
                 if (empty($order->code)) {
                     $order->code = $order->getRandomCode();
@@ -129,31 +132,34 @@ class PMPro_Register_Hooks
 
                 //just save, the user will go to PayPal to pay
                 $order->status        = "review";
-                $order->user_id       = $data->userId;
                 $order->membership_id = $level->id;
+                $order->user_id       = $data->getUserId();
                 $order->payment_transaction_id = "PMPRO_CRYPTOPAY_" . $order->code;
                 $order->saveOrder();
 
-                $data->model->update(['orderId' => $order->id], ['hash' => $data->hash]);
+                $data->getOrder()->setId(intval($order->id));
+                $data->getDynamicData()->set('orderId', intval($order->id));
+
+                return $data;
             });
 
-            Hook::addAction('payment_finished_pmpro', function (object $data): void {
+            Hook::addAction('payment_finished_pmpro', function (PaymentDataType $data): void {
                 global $pmpro_levels, $wpdb;
 
-                $orderId = ($data->model->findOneBy(['hash' => $data->hash]))->orderId;
+                $orderId = $data->getDynamicData()->get('orderId');
                 $order = new \MemberOrder($orderId);
                 if (!$order->id) {
                     return;
                 }
 
-                if (!$data->status) {
+                if (!$data->getStatus()) {
                     $order->status = "error";
                     $order->saveOrder();
                     return;
                 }
 
-                $level = $pmpro_levels[$data->params->pmpro->levelId];
-                pmpro_check_discount_code($data->order, $level);
+                $level = $pmpro_levels[$data->getParams()->get('levelId')];
+                pmpro_check_discount_code($level, $data->getParams()->get('discountCode'));
 
                 $startdate = current_time("mysql");
                 if (!empty($level->expiration_number)) {
@@ -167,8 +173,9 @@ class PMPro_Register_Hooks
                 }
 
                 $discountCodeId = "";
-                if (isset($data->order->discountCode)) {
-                    $codeCheck = pmpro_checkDiscountCode($data->order->discountCode, $level->id, true);
+                if ($data->getParams()->get('discountCode')) {
+                    $discountCode = $data->getParams()->get('discountCode');
+                    $codeCheck = pmpro_checkDiscountCode($discountCode, $level->id, true);
 
                     if ($codeCheck[0] == false) {
                         $useDiscountCode = false;
@@ -177,39 +184,39 @@ class PMPro_Register_Hooks
                     }
 
                     // update membership_user table.
-                    if (!empty($data->order->discountCode) && !empty($useDiscountCode)) {
-                        $discountCodeId = $wpdb->get_var("SELECT id FROM $wpdb->pmpro_discount_codes WHERE code = '" . esc_sql($data->order->discountCode) . "' LIMIT 1");
+                    if (!empty($discountCode) && !empty($useDiscountCode)) {
+                        $discountCodeId = $wpdb->get_var("SELECT id FROM $wpdb->pmpro_discount_codes WHERE code = '" . esc_sql($discountCode) . "' LIMIT 1");
 
-                        $wpdb->query("INSERT INTO $wpdb->pmpro_discount_codes_uses (code_id, user_id, order_id, timestamp) VALUES('" . $discountCodeId . "', '" . $data->userId . "', '" . intval($orderId) . "', '" . current_time("mysql") . "')");
+                        $wpdb->query("INSERT INTO $wpdb->pmpro_discount_codes_uses (code_id, user_id, order_id, timestamp) VALUES('" . $discountCodeId . "', '" . $data->getUserId() . "', '" . intval($orderId) . "', '" . current_time("mysql") . "')");
                     }
                 }
 
                 $userLevel = array(
-                    'user_id'         => $data->userId,
+                    'enddate'         => $enddate,
+                    'startdate'       => $startdate,
                     'membership_id'   => $level->id,
                     'code_id'         => $discountCodeId,
-                    'initial_payment' => pmpro_round_price($level->initial_payment),
-                    'billing_amount'  => pmpro_round_price($level->billing_amount),
+                    'user_id'         => $data->getUserId(),
+                    'trial_limit'     => $level->trial_limit,
                     'cycle_number'    => $level->cycle_number,
                     'cycle_period'    => $level->cycle_period,
                     'billing_limit'   => $level->billing_limit,
                     'trial_amount'    => pmpro_round_price($level->trial_amount),
-                    'trial_limit'     => $level->trial_limit,
-                    'startdate'       => $startdate,
-                    'enddate'         => $enddate
+                    'billing_amount'  => pmpro_round_price($level->billing_amount),
+                    'initial_payment' => pmpro_round_price($level->initial_payment),
                 );
 
-                pmpro_changeMembershipLevel($userLevel, $data->userId, 'changed');
+                pmpro_changeMembershipLevel($userLevel, $data->getUserId(), 'changed');
 
                 $order->status = "success";
                 $order->saveOrder();
             });
 
-            Hook::addFilter('payment_redirect_urls_pmpro', function (object $data) {
+            Hook::addFilter('payment_redirect_urls_pmpro', function (PaymentDataType $data) {
                 return [
-                    'success' => pmpro_url("confirmation", "?level=" . $data->params->pmpro->levelId),
                     'failed' => pmpro_url("account"),
-                    'reminderEmail' => pmpro_url("account")
+                    'reminderEmail' => pmpro_url("account"),
+                    'success' => pmpro_url("confirmation", "?level=" . $data->getParams()->get('levelId'))
                 ];
             });
         }

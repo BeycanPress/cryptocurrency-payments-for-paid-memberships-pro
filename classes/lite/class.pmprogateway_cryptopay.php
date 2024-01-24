@@ -44,8 +44,6 @@ class PMProGateway_cryptopay_lite extends PMProGateway
             add_filter('pmpro_include_payment_information_fields', '__return_false');
             add_action('pmpro_checkout_default_submit_button', ['PMProGateway_cryptopay_lite', 'pmpro_checkout']);
         }
-
-        add_action('wp_enqueue_scripts', ['PMProGateway_cryptopay_lite', 'pmpro_load_scripts']);
     }
 
     /**
@@ -128,6 +126,8 @@ class PMProGateway_cryptopay_lite extends PMProGateway
                             'levelId' => (int) $pmpro_level->id
                         ]
                     ]);
+
+                    self::pmpro_load_scripts();
                 ?>
             </div>
             <?php
@@ -144,19 +144,21 @@ class PMProGateway_cryptopay_lite extends PMProGateway
      */
     public static function pmpro_load_scripts(): void
     {
-        wp_enqueue_script(
-            'pmpro_cryptopay_main_js',
-            PMPRO_CRYPTOPAY_URL . 'assets/js/main.js',
-            ['jquery'],
-            PMPRO_CRYPTOPAY_VERSION,
-            true
-        );
-        wp_localize_script('pmpro_cryptopay_main_js', 'PMProCryptoPay', [
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('pmpro_cryptopay_use_discount'),
-            'lang' => [
-                'pleaseWait' => __('Please wait...', 'pmpro-cryptopay'),
-            ]
-        ]);
+        if (!wp_script_is('pmpro_cryptopay_main')) {
+            wp_enqueue_script(
+                'pmpro_cryptopay_main',
+                PMPRO_CRYPTOPAY_URL . 'assets/js/main.js',
+                ['jquery'],
+                PMPRO_CRYPTOPAY_VERSION,
+                true
+            );
+            wp_localize_script('pmpro_cryptopay_main', 'PMProCryptoPay', [
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('pmpro_cryptopay_use_discount'),
+                'lang' => [
+                    'pleaseWait' => __('Please wait...', 'pmpro-cryptopay'),
+                ]
+            ]);
+        }
     }
 }
