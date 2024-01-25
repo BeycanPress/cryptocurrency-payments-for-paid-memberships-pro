@@ -1,19 +1,22 @@
 (($) => {
     $(document).ready(() => {
 
-        const order = CryptoPayVars.order;
-        const params = CryptoPayVars.params;
-    
-        let startedApp;
-        const autoStarter = (order, params) => {
-            if (!startedApp) {
-                startedApp = window.CryptoPayApp.start(order, params);
-            } else {
-                startedApp.reStart(order, params);
+        let order, params;
+        if (window.CryptoPayVars) {
+            order = CryptoPayVars.order;
+            params = CryptoPayVars.params;
+        
+            let startedApp;
+            const autoStarter = (order, params) => {
+                if (!startedApp) {
+                    startedApp = window.CryptoPayApp.start(order, params);
+                } else {
+                    startedApp.reStart(order, params);
+                }
             }
+        
+            autoStarter(order, params);
         }
-    
-        autoStarter(order, params);
     
         $("#other_discount_code_button").click(function() {
             var discountCode = jQuery('#other_discount_code').val();
