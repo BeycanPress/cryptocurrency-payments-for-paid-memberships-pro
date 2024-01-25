@@ -145,6 +145,11 @@ class PMPro_Register_Hooks
                 return $data;
             });
 
+            Hook::addFilter('before_payment_finished_pmpro', function (PaymentDataType $data): PaymentDataType {
+                $data->getOrder()->setId(intval($data->getDynamicData()->get('orderId')));
+                return $data;
+            });
+
             Hook::addAction('payment_finished_pmpro', function (PaymentDataType $data): void {
                 global $pmpro_levels, $wpdb;
 
