@@ -76,7 +76,7 @@ class PMPro_Register_Hooks
                 }
             }
 
-            Hook::addAction('before_payment_started_pmpro', function (PaymentDataType $data): PaymentDataType {
+            Hook::addFilter('before_payment_started_pmpro', function (PaymentDataType $data): PaymentDataType {
                 global $pmpro_levels;
                 $currentUser = wp_get_current_user();
 
