@@ -55,6 +55,9 @@ You can easily translate with Loco translate.
 
 == Changelog ==
 
+= 1.0.4 =
+* Updated: Compatibility due to updates in CryptoPay 2.1.0
+
 = 1.0.3 = 
 * Improved: for CryptoPay 2.0.0
 
