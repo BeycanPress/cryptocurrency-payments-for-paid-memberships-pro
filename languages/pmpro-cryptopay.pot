@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Paid Memberships Pro - CryptoPay Gateway\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-10 17:35+0000\n"
+"POT-Creation-Date: 2024-01-24 11:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.6.4; wp-6.2.2\n"
+"X-Loco-Version: 2.6.6; wp-6.4.2\n"
 "X-Domain: pmpro-cryptopay"
 
 #. Description of the plugin
@@ -21,18 +21,19 @@ msgid "Adds CryptoPay as a gateway option for Paid Memberships Pro."
 msgstr ""
 
 #. Author of the plugin
-msgid "BeycanPress"
+msgid "BeycanPress LLC"
 msgstr ""
 
-#: index.php:113
+#: cryptocurrency-payments-for-paid-memberships-pro.php:81
+#: cryptocurrency-payments-for-paid-memberships-pro.php:139
 msgid "clicking here"
 msgstr ""
 
-#: classes/pro/class.pmprogateway_cryptopay.php:50
+#: classes/pro/class.pmprogateway_cryptopay.php:59
 msgid "CryptoPay"
 msgstr ""
 
-#: classes/lite/class.pmprogateway_cryptopay_lite.php:51
+#: classes/lite/class.pmprogateway_cryptopay.php:56
 msgid "CryptoPay Lite"
 msgstr ""
 
@@ -41,29 +42,33 @@ msgid "https://beycanpress.com"
 msgstr ""
 
 #. URI of the plugin
-msgid "https://beycanpress.com/cryptopay"
+msgid "https://beycanpress.com/cryptopay/"
 msgstr ""
 
-#: classes/class.pmpro_ajax_api.php:33
-#: classes/lite/class.pmpro_register_hooks.php:45
-#: classes/pro/class.pmpro_register_hooks.php:45
+#: classes/class.pmpro_ajax_api.php:42
+#: classes/lite/class.pmpro_register_hooks.php:61
+#: classes/pro/class.pmpro_register_hooks.php:64
 msgid "Invalid discount code!"
 msgstr ""
 
-#: classes/class.pmpro_ajax_api.php:28
+#: classes/class.pmpro_ajax_api.php:37
 msgid "Invalid level id!"
 msgstr ""
 
-#: classes/lite/class.pmprogateway_cryptopay_lite.php:113
-#: classes/pro/class.pmprogateway_cryptopay.php:112
+#: classes/lite/class.pmprogateway_cryptopay.php:118
+#: classes/pro/class.pmprogateway_cryptopay.php:121
 msgid "Level price:"
+msgstr ""
+
+#: classes/pro/class.pmpro_register_hooks.php:34
+msgid "Not found"
 msgstr ""
 
 #. Name of the plugin
 msgid "Paid Memberships Pro - CryptoPay Gateway"
 msgstr ""
 
-#: index.php:113
+#: cryptocurrency-payments-for-paid-memberships-pro.php:139
 #, php-format
 msgid ""
 "Paid Memberships Pro - CryptoPay Gateway: This plugin is an extra feature "
@@ -71,12 +76,20 @@ msgid ""
 "can buy CryptoPay by %s."
 msgstr ""
 
-#: classes/lite/class.pmprogateway_cryptopay_lite.php:151
-#: classes/pro/class.pmprogateway_cryptopay.php:150
+#: cryptocurrency-payments-for-paid-memberships-pro.php:81
+#, php-format
+msgid ""
+"Paid Memberships Pro - CryptoPay Gateway: This plugin is an extra feature "
+"plugin so it cannot do anything on its own. It needs Paid Memberships Pro to "
+"work. You can download Paid Memberships Pro by %s."
+msgstr ""
+
+#: classes/lite/class.pmprogateway_cryptopay.php:159
+#: classes/pro/class.pmprogateway_cryptopay.php:164
 msgid "Please wait..."
 msgstr ""
 
-#: classes/lite/class.pmpro_register_hooks.php:36
-#: classes/pro/class.pmpro_register_hooks.php:36
+#: classes/lite/class.pmpro_register_hooks.php:44
+#: classes/pro/class.pmpro_register_hooks.php:47
 msgid "The relevant level was not found!"
 msgstr ""

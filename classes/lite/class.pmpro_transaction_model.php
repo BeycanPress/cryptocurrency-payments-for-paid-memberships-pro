@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+defined('ABSPATH') || exit;
+
+// @phpcs:disable PSR1.Files.SideEffects
 // @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 
 use BeycanPress\CryptoPayLite\Models\AbstractTransaction;

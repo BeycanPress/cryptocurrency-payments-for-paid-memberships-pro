@@ -3,9 +3,9 @@ Contributors: BeycanPress
 Tags: Bitcoin, Ethereum, Binance Smart Chain, Blockchain, Networks, Cryptocurrency, Payments, Gateway, WordPress, Paid Memberships Pro
 Requires at least: 5.0
 Tested up to: 6.4.2
-Requires PHP: 7.4
-Stable Tag: 1.0.3
-Version: 1.0.3
+Requires PHP: 8.1
+Stable Tag: 1.0.4
+Version: 1.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -54,6 +54,9 @@ You can easily translate with Loco translate.
 3. Enjoy.
 
 == Changelog ==
+
+= 1.0.4 =
+* Updated: Compatibility due to updates in CryptoPay 2.1.0
 
 = 1.0.3 = 
 * Improved: for CryptoPay 2.0.0
