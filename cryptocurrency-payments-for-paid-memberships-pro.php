@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 
 /**
  * Plugin Name: Paid Memberships Pro - CryptoPay Gateway
- * Version:     1.0.4
+ * Version:     1.0.5
  * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
  * Author:      BeycanPress LLC
@@ -25,13 +25,15 @@ defined('ABSPATH') || exit;
  * Requires PHP: 8.1
 */
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 use BeycanPress\CryptoPay\Loader;
 use BeycanPress\CryptoPay\PluginHero\Hook;
 use BeycanPress\CryptoPayLite\Loader as LiteLoader;
 use BeycanPress\CryptoPayLite\PluginHero\Hook as LiteHook;
 
 define('PMPRO_CRYPTOPAY_FILE', __FILE__);
-define('PMPRO_CRYPTOPAY_VERSION', '1.0.4');
+define('PMPRO_CRYPTOPAY_VERSION', '1.0.5');
 define('PMPRO_CRYPTOPAY_URL', plugin_dir_url(__FILE__));
 
 register_activation_hook(PMPRO_CRYPTOPAY_FILE, function (): void {
@@ -64,9 +66,33 @@ function pmpro_cryptopay_addModels(): void
         require_once __DIR__ . '/classes/lite/class.pmpro_transaction_model.php';
         LiteHook::addFilter('models', function ($models) {
             return array_merge($models, [
-                'pmpro_lite' => new PMPro_Transaction_Model_Lite()
+                'pmpro' => new PMPro_Transaction_Model_Lite()
             ]);
         });
+    }
+}
+
+/**
+ * @param object $level
+ * @param string|null $discountCode
+ * @return void
+ */
+function pmpro_cryptopay_check_discount_code(object &$level, ?string $discountCode = null): void
+{
+    if ($discountCode) {
+        global $wpdb;
+        $codeCheck = pmpro_checkDiscountCode($discountCode, $level->id, true);
+        if ($codeCheck[0] == false) {
+            Response::error(esc_html__('Invalid discount code!', 'pmpro-cryptopay'));
+        }
+
+        $discountId = $wpdb->get_var("SELECT id FROM $wpdb->pmpro_discount_codes WHERE code = '" . esc_sql($discountCode) . "' LIMIT 1");
+
+        $discountPrice = $wpdb->get_var("SELECT initial_payment  FROM $wpdb->pmpro_discount_codes_levels WHERE code_id = '" . esc_sql($discountId) . "' LIMIT 1");
+
+        $level->price = floatval($discountPrice);
+        $level->initial_payment = $level->price;
+        $level->billing_amount  = $level->price;
     }
 }
 

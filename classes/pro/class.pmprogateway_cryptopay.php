@@ -25,6 +25,11 @@ class PMProGateway_cryptopay extends PMProGateway
     /**
      * @param string $gateway
      */
+    public string $gateway;
+
+    /**
+     * @param string $gateway
+     */
     public function __construct(?string $gateway = null)
     {
         return parent::__construct($gateway);

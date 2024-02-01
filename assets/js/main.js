@@ -1,15 +1,19 @@
 (($) => {
     $(document).ready(() => {
 
-        let order, params;
-        if (window.CryptoPayVars) {
-            order = CryptoPayVars.order;
-            params = CryptoPayVars.params;
+        let order, params, autoStarter;
+        if (window.CryptoPayVars || window.CryptoPayLiteVars) {
+            order = window?.CryptoPayVars?.order || window?.CryptoPayLiteVars?.order;
+            params = window?.CryptoPayVars?.params || window?.CryptoPayLiteVars?.params;
         
             let startedApp;
-            const autoStarter = (order, params) => {
+            autoStarter = (order, params) => {
                 if (!startedApp) {
-                    startedApp = window.CryptoPayApp.start(order, params);
+                    if (window.CryptoPayApp) {
+                        startedApp = window.CryptoPayApp.start(order, params);
+                    } else {
+                        startedApp = window.CryptoPayLiteApp.start(order, params);
+                    }
                 } else {
                     startedApp.reStart(order, params);
                 }
@@ -45,16 +49,9 @@
                 },
                 success(response) {
                     if (response.data && response.data.amount) {
-                        if (window.CryptoPayApp) {
-                            params.discountCode = discountCode;
-                            order.amount = response.data.amount;
-                            autoStarter(order, params);
-                        } else if (window.CryptoPayLite) {
-                            CryptoPayLiteApp.reset();
-                            CryptoPayLite.order.amount = response.data.amount;
-                            CryptoPayLite.order.discountCode = discountCode;
-                            initCryptoPayLite("cryptopay", CryptoPayLite);
-                        }
+                        params.discountCode = discountCode;
+                        order.amount = response.data.amount;
+                        autoStarter(order, params);
                     }
                     $("#PMProCryptoPayWrapper #cryptopay").show();
                     $("#PMProCryptoPayWrapper #pmpro-cryptopay-please-wait").remove();

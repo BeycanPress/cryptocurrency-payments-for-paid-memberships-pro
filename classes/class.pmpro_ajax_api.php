@@ -52,7 +52,7 @@ class PMPro_Ajax_Api
         $discountPrice = $wpdb->get_var(
             "SELECT initial_payment 
             FROM $wpdb->pmpro_discount_codes_levels 
-            WHERE code_id = '" . esc_sql($discountId) . "' LIMIT 1"
+            WHERE code_id = " . esc_sql($discountId) . " AND level_id = " . esc_sql($levelId) . " LIMIT 1"
         );
 
         Response::success(null, [

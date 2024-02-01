@@ -13,12 +13,20 @@ require_once PMPRO_DIR . '/classes/gateways/class.pmprogateway.php';
 
 add_action('init', ['PMProGateway_cryptopay_lite', 'init']);
 
-use BeycanPress\CryptoPayLite\Services;
+use BeycanPress\CryptoPayLite\Helpers;
+use BeycanPress\CryptoPayLite\Payment;
 use BeycanPress\CryptoPayLite\PluginHero\Hook;
+use BeycanPress\CryptoPayLite\Types\Order\OrderType;
+use BeycanPress\CryptoPayLite\Types\Transaction\ParamsType;
 
 // @phpcs:ignore
 class PMProGateway_cryptopay_lite extends PMProGateway
 {
+    /**
+     * @param string $gateway
+     */
+    public string $gateway;
+
     /**
      * @param string $gateway
      */
@@ -120,14 +128,17 @@ class PMProGateway_cryptopay_lite extends PMProGateway
                         $lang['orderAmount'] = __('Level price:', 'pmpro-cryptopay');
                         return $lang;
                     });
-                    echo Services::startPaymentProcess([
+
+                    echo (new Payment('pmpro'))
+                    ->setOrder(OrderType::fromArray([
                         'amount' => (float) $pmpro_level->initial_payment,
                         'currency' => strtoupper(pmpro_getOption('currency'))
-                    ], 'pmpro_lite', true, [
-                        'pmpro' => [
-                            'levelId' => (int) $pmpro_level->id
-                        ]
-                    ]);
+                    ]))
+                    ->setParams(ParamsType::fromArray([
+                        'levelId' => (int) $pmpro_level->id
+                    ]))
+                    ->setAutoStart(false)
+                    ->html(loading:true);
 
                     self::pmpro_load_scripts();
                 ?>
@@ -150,7 +161,7 @@ class PMProGateway_cryptopay_lite extends PMProGateway
             wp_enqueue_script(
                 'pmpro_cryptopay_main',
                 PMPRO_CRYPTOPAY_URL . 'assets/js/main.js',
-                ['jquery'],
+                ['jquery', Helpers::getProp('mainJsKey')],
                 PMPRO_CRYPTOPAY_VERSION,
                 true
             );
