@@ -1,13 +1,13 @@
 (($) => {
     $(document).ready(() => {
 
-        let order, params;
+        let order, params, autoStarter;
         if (window.CryptoPayVars || window.CryptoPayLiteVars) {
             order = window?.CryptoPayVars?.order || window?.CryptoPayLiteVars?.order;
             params = window?.CryptoPayVars?.params || window?.CryptoPayLiteVars?.params;
         
             let startedApp;
-            const autoStarter = (order, params) => {
+            autoStarter = (order, params) => {
                 if (!startedApp) {
                     if (window.CryptoPayApp) {
                         startedApp = window.CryptoPayApp.start(order, params);

@@ -25,6 +25,8 @@ defined('ABSPATH') || exit;
  * Requires PHP: 8.1
 */
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 use BeycanPress\CryptoPay\Loader;
 use BeycanPress\CryptoPay\PluginHero\Hook;
 use BeycanPress\CryptoPayLite\Loader as LiteLoader;
