@@ -27,7 +27,7 @@ class PMPro_Register_Hooks
 
             if (is_admin()) {
                 new TransactionPage(
-                    esc_html__('PMPro transactions', 'cryptopay'),
+                    esc_html__('PMPro transactions', 'pmpro-cryptopay'),
                     'pmpro',
                     9,
                     [
@@ -42,7 +42,7 @@ class PMPro_Register_Hooks
                 );
             }
 
-            Hook::addFilter('init_pmpro', function (object $data) {
+            Hook::addFilter('init_pmpro', function (PaymentDataType $data) {
                 global $pmpro_levels;
 
                 if (!isset($pmpro_levels[$data->getParams()->get('levelId')])) {
@@ -52,37 +52,13 @@ class PMPro_Register_Hooks
                 return $data;
             });
 
-            /**
-             * @param object $level
-             * @param string|null $discountCode
-             * @return void
-             */
-            function pmpro_check_discount_code(object &$level, ?string $discountCode = null): void
-            {
-                if ($discountCode) {
-                    global $wpdb;
-                    $codeCheck = pmpro_checkDiscountCode($discountCode, $level->id, true);
-                    if ($codeCheck[0] == false) {
-                        Response::error(esc_html__('Invalid discount code!', 'pmpro-cryptopay'));
-                    }
-
-                    $discountId = $wpdb->get_var("SELECT id FROM $wpdb->pmpro_discount_codes WHERE code = '" . esc_sql($discountCode) . "' LIMIT 1");
-
-                    $discountPrice = $wpdb->get_var("SELECT initial_payment  FROM $wpdb->pmpro_discount_codes_levels WHERE code_id = '" . esc_sql($discountId) . "' LIMIT 1");
-
-                    $level->price = floatval($discountPrice);
-                    $level->initial_payment = $level->price;
-                    $level->billing_amount  = $level->price;
-                }
-            }
-
             Hook::addFilter('before_payment_started_pmpro', function (PaymentDataType $data): PaymentDataType {
                 global $pmpro_levels;
                 $currentUser = wp_get_current_user();
 
                 $order = new \MemberOrder();
                 $level = $pmpro_levels[$data->getParams()->get('levelId')];
-                pmpro_check_discount_code($level, $data->getParams()->get('discountCode'));
+                pmpro_cryptopay_check_discount_code($level, $data->getParams()->get('discountCode'));
 
                 if (empty($order->code)) {
                     $order->code = $order->getRandomCode();
@@ -118,7 +94,7 @@ class PMPro_Register_Hooks
                 $order->billing->phone   = "";
 
                 $order->gateway       = 'cryptopay';
-                $order->payment_type  = 'Cryptocurrency';
+                $order->payment_type  = 'CryptoPay';
                 $order->setGateway();
 
                 // Set up level var.
@@ -166,7 +142,7 @@ class PMPro_Register_Hooks
                 }
 
                 $level = $pmpro_levels[$data->getParams()->get('levelId')];
-                pmpro_check_discount_code($level, $data->getParams()->get('discountCode'));
+                pmpro_cryptopay_check_discount_code($level, $data->getParams()->get('discountCode'));
 
                 $startdate = current_time("mysql");
                 if (!empty($level->expiration_number)) {
