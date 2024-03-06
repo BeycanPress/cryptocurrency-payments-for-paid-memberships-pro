@@ -146,7 +146,7 @@ class PMPro_Register_Hooks
 
                 $startdate = current_time("mysql");
                 if (!empty($level->expiration_number)) {
-                    if ($level->expiration_period == 'Hour') {
+                    if ('Hour' == $level->expiration_period) {
                         $enddate =  date("Y-m-d H:i:s", strtotime("+ " . $level->expiration_number . " " . $level->expiration_period, current_time("timestamp")));
                     } else {
                         $enddate =  date("Y-m-d 23:59:59", strtotime("+ " . $level->expiration_number . " " . $level->expiration_period, current_time("timestamp")));
@@ -160,7 +160,7 @@ class PMPro_Register_Hooks
                     $discountCode = $data->getParams()->get('discountCode');
                     $codeCheck = pmpro_checkDiscountCode($discountCode, $level->id, true);
 
-                    if ($codeCheck[0] == false) {
+                    if (false == $codeCheck[0]) {
                         $useDiscountCode = false;
                     } else {
                         $useDiscountCode = true;
@@ -174,7 +174,7 @@ class PMPro_Register_Hooks
                     }
                 }
 
-                $userLevel = array(
+                $userLevel = [
                     'enddate'         => $enddate,
                     'startdate'       => $startdate,
                     'membership_id'   => $level->id,
@@ -187,7 +187,7 @@ class PMPro_Register_Hooks
                     'trial_amount'    => pmpro_round_price($level->trial_amount),
                     'billing_amount'  => pmpro_round_price($level->billing_amount),
                     'initial_payment' => pmpro_round_price($level->initial_payment),
-                );
+                ];
 
                 pmpro_changeMembershipLevel($userLevel, $data->getUserId(), 'changed');
 

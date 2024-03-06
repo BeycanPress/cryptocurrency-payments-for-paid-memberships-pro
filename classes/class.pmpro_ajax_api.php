@@ -40,7 +40,7 @@ class PMPro_Ajax_Api
         }
 
         $codeCheck = pmpro_checkDiscountCode($discountCode, $levelId, true);
-        if ($codeCheck[0] == false) {
+        if (false == $codeCheck[0]) {
             Response::error(esc_html__('Invalid discount code!', 'pmpro-cryptopay'));
         }
 

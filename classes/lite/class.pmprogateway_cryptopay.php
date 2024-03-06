@@ -48,7 +48,7 @@ class PMProGateway_cryptopay_lite extends PMProGateway
         add_filter('pmpro_payment_options', ['PMProGateway_cryptopay_lite', 'pmpro_payment_options']);
         add_filter('pmpro_required_billing_fields', ['PMProGateway_cryptopay_lite', 'pmpro_required_billing_fields']);
 
-        if (pmpro_getOption('gateway') == 'cryptopay_lite') {
+        if ('cryptopay_lite' == pmpro_getOption('gateway')) {
             add_filter('pmpro_billing_show_payment_method', '__return_false');
             add_filter('pmpro_include_billing_address_fields', '__return_false');
             add_filter('pmpro_include_payment_information_fields', '__return_false');
@@ -120,7 +120,7 @@ class PMProGateway_cryptopay_lite extends PMProGateway
     {
         global $gateway, $pmpro_level, $discount_code;
 
-        if ($gateway == 'cryptopay_lite' && is_user_logged_in()) {
+        if ('cryptopay_lite' == $gateway && is_user_logged_in()) {
             ?>
             <div id="PMProCryptoPayWrapper">
                 <?php

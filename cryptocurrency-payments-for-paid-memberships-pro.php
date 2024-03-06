@@ -82,7 +82,7 @@ function pmpro_cryptopay_check_discount_code(object &$level, ?string $discountCo
     if ($discountCode) {
         global $wpdb;
         $codeCheck = pmpro_checkDiscountCode($discountCode, $level->id, true);
-        if ($codeCheck[0] == false) {
+        if (false == $codeCheck[0]) {
             Response::error(esc_html__('Invalid discount code!', 'pmpro-cryptopay'));
         }
 
@@ -103,7 +103,7 @@ add_action('plugins_loaded', function (): void {
 
     load_plugin_textdomain('pmpro-cryptopay', false, basename(__DIR__) . '/languages');
 
-    if (defined('PMPRO_DIR') == false) {
+    if (false == defined('PMPRO_DIR')) {
         add_action('admin_notices', function (): void {
             $class = 'notice notice-error';
             $message = sprintf(esc_html__('Paid Memberships Pro - CryptoPay Gateway: This plugin is an extra feature plugin so it cannot do anything on its own. It needs Paid Memberships Pro to work. You can download Paid Memberships Pro by %s.', 'pmpro-cryptopay'), '<a href="https://wordpress.org/plugins/paid-memberships-pro/" target="_blank">' . esc_html__('clicking here', 'pmpro-cryptopay') . '</a>');
