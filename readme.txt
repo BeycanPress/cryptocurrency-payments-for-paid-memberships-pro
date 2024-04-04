@@ -4,8 +4,8 @@ Tags: Bitcoin, Ethereum, Binance Smart Chain, Blockchain, Networks, Cryptocurren
 Requires at least: 5.0
 Tested up to: 6.5.0
 Requires PHP: 8.1
-Stable Tag: 1.0.6
-Version: 1.0.6
+Stable Tag: 1.0.7
+Version: 1.0.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -54,6 +54,9 @@ You can easily translate with Loco translate.
 3. Enjoy.
 
 == Changelog ==
+
+= 1.0.7 =
+* Updated: Compatibility due to updates for new CryptoPay versions
 
 = 1.0.6 =
 * Updated: Compatibility due to updates for WordPress 6.5.0

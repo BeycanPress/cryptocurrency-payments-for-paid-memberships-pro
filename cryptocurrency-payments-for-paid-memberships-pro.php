@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
 /**
  * Plugin Name: CryptoPay Gateway for Paid Memberships Pro
  * Requires Plugins: paid-memberships-pro, cryptopay-wc-lite
- * Version:     1.0.6
+ * Version:     1.0.7
  * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
  * Author:      BeycanPress LLC
@@ -30,11 +30,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use BeycanPress\CryptoPay\Loader;
 use BeycanPress\CryptoPay\PluginHero\Hook;
-use BeycanPress\CryptoPayLite\Loader as LiteLoader;
 use BeycanPress\CryptoPayLite\PluginHero\Hook as LiteHook;
 
 define('PMPRO_CRYPTOPAY_FILE', __FILE__);
-define('PMPRO_CRYPTOPAY_VERSION', '1.0.6');
+define('PMPRO_CRYPTOPAY_VERSION', '1.0.7');
 define('PMPRO_CRYPTOPAY_URL', plugin_dir_url(__FILE__));
 
 add_filter('wp_plugin_dependencies_slug', function ($slug) {
@@ -45,11 +44,11 @@ add_filter('wp_plugin_dependencies_slug', function ($slug) {
 });
 
 register_activation_hook(PMPRO_CRYPTOPAY_FILE, function (): void {
-    if (class_exists(Loader::class)) {
+    if (defined('CRYPTOPAY_LOADED')) {
         require_once __DIR__ . '/classes/pro/class.pmpro_transaction_model.php';
         (new PMPro_Transaction_Model())->createTable();
     }
-    if (class_exists(LiteLoader::class)) {
+    if (defined('CRYPTOPAY_LITE_LOADED')) {
         require_once __DIR__ . '/classes/lite/class.pmpro_transaction_model.php';
         (new PMPro_Transaction_Model_Lite())->createTable();
     }
@@ -61,7 +60,7 @@ register_activation_hook(PMPRO_CRYPTOPAY_FILE, function (): void {
  */
 function pmpro_cryptopay_addModels(): void
 {
-    if (class_exists(Loader::class)) {
+    if (defined('CRYPTOPAY_LOADED')) {
         require_once __DIR__ . '/classes/pro/class.pmpro_transaction_model.php';
         Hook::addFilter('models', function ($models) {
             return array_merge($models, [
@@ -70,7 +69,7 @@ function pmpro_cryptopay_addModels(): void
         });
     }
 
-    if (class_exists(LiteLoader::class)) {
+    if (defined('CRYPTOPAY_LITE_LOADED')) {
         require_once __DIR__ . '/classes/lite/class.pmpro_transaction_model.php';
         LiteHook::addFilter('models', function ($models) {
             return array_merge($models, [
@@ -121,15 +120,15 @@ add_action('plugins_loaded', function (): void {
         return;
     }
 
-    if ((class_exists(Loader::class) || class_exists(LiteLoader::class))) {
+    if ((defined('CRYPTOPAY_LOADED') || defined('CRYPTOPAY_LITE_LOADED'))) {
         require_once __DIR__ . '/classes/class.pmpro_ajax_api.php';
 
-        if (class_exists(Loader::class)) {
+        if (defined('CRYPTOPAY_LOADED')) {
             require_once __DIR__ . '/classes/pro/class.pmpro_register_hooks.php';
             require_once __DIR__ . '/classes/pro/class.pmprogateway_cryptopay.php';
         }
 
-        if (class_exists(LiteLoader::class)) {
+        if (defined('CRYPTOPAY_LITE_LOADED')) {
             require_once __DIR__ . '/classes/lite/class.pmpro_register_hooks.php';
             require_once __DIR__ . '/classes/lite/class.pmprogateway_cryptopay.php';
         }
