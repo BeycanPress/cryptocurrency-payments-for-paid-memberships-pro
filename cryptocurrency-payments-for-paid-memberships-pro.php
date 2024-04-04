@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 
 /**
  * Plugin Name: CryptoPay Gateway for Paid Memberships Pro
- * Requires Plugins: paid-memberships-pro
+ * Requires Plugins: paid-memberships-pro, cryptopay-wc-lite
  * Version:     1.0.6
  * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
@@ -24,7 +24,7 @@ defined('ABSPATH') || exit;
  * Requires at least: 5.0
  * Tested up to: 6.5.0
  * Requires PHP: 8.1
-*/
+ */
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -36,6 +36,13 @@ use BeycanPress\CryptoPayLite\PluginHero\Hook as LiteHook;
 define('PMPRO_CRYPTOPAY_FILE', __FILE__);
 define('PMPRO_CRYPTOPAY_VERSION', '1.0.6');
 define('PMPRO_CRYPTOPAY_URL', plugin_dir_url(__FILE__));
+
+add_filter('wp_plugin_dependencies_slug', function ($slug) {
+    if ('cryptopay-wc-lite' === $slug && class_exists(Loader::class)) {
+        $slug = 'cryptopay';
+    }
+    return $slug;
+});
 
 register_activation_hook(PMPRO_CRYPTOPAY_FILE, function (): void {
     if (class_exists(Loader::class)) {
@@ -100,6 +107,7 @@ function pmpro_cryptopay_check_discount_code(object &$level, ?string $discountCo
 pmpro_cryptopay_addModels();
 
 add_action('plugins_loaded', function (): void {
+
     pmpro_cryptopay_addModels();
 
     load_plugin_textdomain('pmpro-cryptopay', false, basename(__DIR__) . '/languages');
@@ -140,7 +148,7 @@ add_action('plugins_loaded', function (): void {
                             parent.next().hide();
                             parent.next().next().hide();
                         }
-    
+
                         if (jQuery('#gateway').val() == 'cryptopay' || jQuery('#gateway').val() == 'cryptopay_lite') {
                             justShowForCryptoPay();
                         }
@@ -164,9 +172,9 @@ add_action('plugins_loaded', function (): void {
     } else {
         add_action('admin_notices', function (): void {
             ?>
-                <div class="notice notice-error">
-                    <p><?php echo sprintf(esc_html__('CryptoPay Gateway for Paid Memberships Pro: This plugin is an extra feature plugin so it cannot do anything on its own. It needs CryptoPay to work. You can buy CryptoPay by %s.', 'pmpro-cryptopay'), '<a href="https://beycanpress.com/cryptopay/?utm_source=wp_org_plugins&utm_medium=pmpro" target="_blank">' . esc_html__('clicking here', 'pmpro-cryptopay') . '</a>'); ?></p>
-                </div>
+            <div class="notice notice-error">
+                <p><?php echo sprintf(esc_html__('CryptoPay Gateway for Paid Memberships Pro: This plugin is an extra feature plugin so it cannot do anything on its own. It needs CryptoPay to work. You can buy CryptoPay by %s.', 'pmpro-cryptopay'), '<a href="https://beycanpress.com/cryptopay/?utm_source=wp_org_plugins&utm_medium=pmpro" target="_blank">' . esc_html__('clicking here', 'pmpro-cryptopay') . '</a>'); ?></p>
+            </div>
             <?php
         });
     }
