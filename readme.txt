@@ -1,6 +1,6 @@
 === Cryptocurrency Payments for Paid Memberships Pro (PMPro) by CryptoPay ===
 Contributors: BeycanPress
-Tags: Bitcoin, Ethereum, Binance Smart Chain, Blockchain, Networks, Cryptocurrency, Payments, Gateway, WordPress, Paid Memberships Pro
+Tags: CryptoPay, Cryptocurrency, Payments, PMPro, Bitcoin
 Requires at least: 5.0
 Tested up to: 6.5.0
 Requires PHP: 8.1
@@ -9,7 +9,7 @@ Version: 1.0.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Cryptocurrency Payments for Paid Memberships Pro (PMPro), Cryptocurrency payment gateway, Bitcoin, Ethereum, Solana, USDT, BNB, BUSD, TRX, SOL, BTC, ETH
+Cryptocurrency Payments for Paid Memberships Pro (PMPro), Cryptocurrency payment gateway, Bitcoin, Ethereum, Solana, USDT, BNB, BUSD, SOL, BTC, ETH
 
 == Description ==
 
