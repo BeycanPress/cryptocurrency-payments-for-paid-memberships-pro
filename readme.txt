@@ -2,10 +2,10 @@
 Contributors: BeycanPress
 Tags: Bitcoin, Ethereum, Binance Smart Chain, Blockchain, Networks, Cryptocurrency, Payments, Gateway, WordPress, Paid Memberships Pro
 Requires at least: 5.0
-Tested up to: 6.4.2
+Tested up to: 6.5.0
 Requires PHP: 8.1
-Stable Tag: 1.0.5
-Version: 1.0.5
+Stable Tag: 1.0.6
+Version: 1.0.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -50,10 +50,13 @@ You can easily translate with Loco translate.
 == Installation ==
 
 1. Upload the entire `/cryptocurrency-payments-for-paid-memberships-pro` directory to the `/wp-content/plugins/` directory.
-2. Activate Paid Memberships Pro - CryptoPay Gateway through the 'Plugins' menu in WordPress.
+2. Activate CryptoPay Gateway for Paid Memberships Pro through the 'Plugins' menu in WordPress.
 3. Enjoy.
 
 == Changelog ==
+
+= 1.0.6 =
+* Updated: Compatibility due to updates for WordPress 6.5.0
 
 = 1.0.5 =
 * Updated: Compatibility due to updates in CryptoPay Lite 2.1.1

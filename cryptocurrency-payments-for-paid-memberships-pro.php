@@ -10,8 +10,9 @@ defined('ABSPATH') || exit;
 // @phpcs:disable Generic.Files.InlineHTML
 
 /**
- * Plugin Name: Paid Memberships Pro - CryptoPay Gateway
- * Version:     1.0.5
+ * Plugin Name: CryptoPay Gateway for Paid Memberships Pro
+ * Requires Plugins: paid-memberships-pro
+ * Version:     1.0.6
  * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
  * Author:      BeycanPress LLC
@@ -21,7 +22,7 @@ defined('ABSPATH') || exit;
  * Text Domain: pmpro-cryptopay
  * Tags: Cryptopay, Cryptocurrency, WooCommerce, WordPress, MetaMask, Trust, Binance, Wallet, Ethereum, Bitcoin, Binance smart chain, Payment, Plugin, Gateway, Moralis, Converter, API, coin market cap, CMC
  * Requires at least: 5.0
- * Tested up to: 6.4.2
+ * Tested up to: 6.5.0
  * Requires PHP: 8.1
 */
 
@@ -33,7 +34,7 @@ use BeycanPress\CryptoPayLite\Loader as LiteLoader;
 use BeycanPress\CryptoPayLite\PluginHero\Hook as LiteHook;
 
 define('PMPRO_CRYPTOPAY_FILE', __FILE__);
-define('PMPRO_CRYPTOPAY_VERSION', '1.0.5');
+define('PMPRO_CRYPTOPAY_VERSION', '1.0.6');
 define('PMPRO_CRYPTOPAY_URL', plugin_dir_url(__FILE__));
 
 register_activation_hook(PMPRO_CRYPTOPAY_FILE, function (): void {
@@ -106,7 +107,7 @@ add_action('plugins_loaded', function (): void {
     if (false == defined('PMPRO_DIR')) {
         add_action('admin_notices', function (): void {
             $class = 'notice notice-error';
-            $message = sprintf(esc_html__('Paid Memberships Pro - CryptoPay Gateway: This plugin is an extra feature plugin so it cannot do anything on its own. It needs Paid Memberships Pro to work. You can download Paid Memberships Pro by %s.', 'pmpro-cryptopay'), '<a href="https://wordpress.org/plugins/paid-memberships-pro/" target="_blank">' . esc_html__('clicking here', 'pmpro-cryptopay') . '</a>');
+            $message = sprintf(esc_html__('CryptoPay Gateway for Paid Memberships Pro: This plugin is an extra feature plugin so it cannot do anything on its own. It needs Paid Memberships Pro to work. You can download Paid Memberships Pro by %s.', 'pmpro-cryptopay'), '<a href="https://wordpress.org/plugins/paid-memberships-pro/" target="_blank">' . esc_html__('clicking here', 'pmpro-cryptopay') . '</a>');
             printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
         });
         return;
@@ -164,7 +165,7 @@ add_action('plugins_loaded', function (): void {
         add_action('admin_notices', function (): void {
             ?>
                 <div class="notice notice-error">
-                    <p><?php echo sprintf(esc_html__('Paid Memberships Pro - CryptoPay Gateway: This plugin is an extra feature plugin so it cannot do anything on its own. It needs CryptoPay to work. You can buy CryptoPay by %s.', 'pmpro-cryptopay'), '<a href="https://beycanpress.com/cryptopay/?utm_source=wp_org_plugins&utm_medium=pmpro" target="_blank">' . esc_html__('clicking here', 'pmpro-cryptopay') . '</a>'); ?></p>
+                    <p><?php echo sprintf(esc_html__('CryptoPay Gateway for Paid Memberships Pro: This plugin is an extra feature plugin so it cannot do anything on its own. It needs CryptoPay to work. You can buy CryptoPay by %s.', 'pmpro-cryptopay'), '<a href="https://beycanpress.com/cryptopay/?utm_source=wp_org_plugins&utm_medium=pmpro" target="_blank">' . esc_html__('clicking here', 'pmpro-cryptopay') . '</a>'); ?></p>
                 </div>
             <?php
         });
