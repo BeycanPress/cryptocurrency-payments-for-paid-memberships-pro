@@ -147,7 +147,7 @@ class PMProGateway_cryptopay_lite extends PMProGateway
         } else {
             $discount_code_link = !empty($discount_code) ? '&discount_code=' . $discount_code : '';
             ?>
-            <span class="<?php echo esc_attr(pmpro_get_element_class('pmpro_checkout-h3-msg')); ?>"><?php esc_html_e('Already have an account?', 'paid-memberships-pro'); ?> <a href="<?php echo esc_url(wp_login_url(apply_filters('pmpro_checkout_login_redirect', pmpro_url("checkout", "?level=" . $pmpro_level->id . $discount_code_link)))); ?>"><?php esc_html_e('Log in here', 'paid-memberships-pro');?></a></span>
+            <span class="<?php echo esc_attr(pmpro_get_element_class('pmpro_checkout-h3-msg')); ?>"><?php esc_html_e('You have to login first for payment process?', 'paid-memberships-pro'); ?> <a href="<?php echo esc_url(wp_login_url(apply_filters('pmpro_checkout_login_redirect', pmpro_url("checkout", "?level=" . $pmpro_level->id . $discount_code_link)))); ?>"><?php esc_html_e('Log in here', 'paid-memberships-pro');?></a></span>
             <?php
         }
     }
