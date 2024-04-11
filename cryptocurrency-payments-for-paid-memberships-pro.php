@@ -22,7 +22,7 @@ defined('ABSPATH') || exit;
  * Text Domain: pmpro-cryptopay
  * Tags: CryptoPay, Cryptocurrency, Payments, PMPro, Bitcoin
  * Requires at least: 5.0
- * Tested up to: 6.5.0
+ * Tested up to: 6.5.2
  * Requires PHP: 8.1
  */
 
