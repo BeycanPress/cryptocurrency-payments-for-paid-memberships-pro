@@ -15,18 +15,20 @@ Cryptocurrency Payments for Paid Memberships Pro (PMPro), Cryptocurrency payment
 
 ### Cryptocurrency Payments for Paid Memberships Pro (PMPro)
 
-First of all, we would like to point out that this plugin is not a standalone plugin. This plugin is a **<a href="https://beycanpress.com/cryptopay/?utm_source=wporg_readme&utm_medium=cryptopay_pmpro">cryptocurrency payment gateway</a>** for Paid Memberships Pro. In other words, users who want to sell memberships with cryptocurrency payment via WordPress can use Paid Memberships Pro. However, this plugin is a **<a href="https://beycanpress.com/cryptopay/?utm_source=wporg_readme&utm_medium=cryptopay_pmpro">cryptocurrency payment gateway</a>** for Paid Memberships Pro as well as an add-on for CryptoPay. So the payment is actually CryptoPay, which is the main plugin that manages the cryptocurrency payment process. Therefore, users must have both plugins.
+Want to sell memberships with Paid Memberships Pro but your community is crypto-related and you're looking for a cryptocurrency payment solution? This integration plugin is the best plugin in the market that will allow you to receive commission-free and peer-to-peer cryptocurrency payments with CryptoPay.
 
-What is CryptoPay?
+#### What is CryptoPay?
 <iframe width="560" height="315" src="https://www.youtube.com/embed/3vaoFL4XG10" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-Review CryptoPay Lite: **<a href="https://wordpress.org/plugins/cryptopay-wc-lite/">Cryptocurrency payments for WordPress</a>**
+### This plugin is an integration plugin. So basically you need to have the following two plugins.
 
-Review CryptoPay Premium: **<a href="https://beycanpress.com/cryptopay/?utm_source=wporg_readme&utm_medium=cryptopay_pmpro">Cryptocurrency payments for WooCommerce</a>**
+**<a href="https://wordpress.org/plugins/cryptopay-wc-lite/">Review CryptoPay Lite</a>**
 
-Review Paid Memberships Pro: **<a href="https://wordpress.org/plugins/paid-memberships-pro/">Cryptocurrency paid memberships for WordPress</a>**
+**<a href="https://beycanpress.com/cryptopay/?utm_source=wporg_readme&utm_medium=cryptopay_pmpro">Review CryptoPay Premium</a>**
 
-See **<a href="https://cryptopay.beycanpress.net/membership-account/membership-checkout/?level=1" target="_blank">Demo</a>**
+**<a href="https://wordpress.org/plugins/paid-memberships-pro/">Review Paid Memberships Pro</a>**
+
+See CryptoPay  **<a href="https://cryptopay.beycanpress.net/membership-account/membership-checkout/?level=1" target="_blank">Demo</a>**
 
 = Privacy notices =
 
