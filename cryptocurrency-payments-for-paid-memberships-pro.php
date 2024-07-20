@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
 /**
  * Plugin Name: CryptoPay Gateway for Paid Memberships Pro
  * Requires Plugins: paid-memberships-pro, cryptopay-wc-lite
- * Version:     1.0.7
+ * Version:     1.0.8
  * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
  * Author:      BeycanPress LLC
@@ -22,7 +22,7 @@ defined('ABSPATH') || exit;
  * Text Domain: pmpro-cryptopay
  * Tags: CryptoPay, Cryptocurrency, Payments, PMPro, Bitcoin
  * Requires at least: 5.0
- * Tested up to: 6.5.2
+ * Tested up to: 6.6
  * Requires PHP: 8.1
  */
 
