@@ -122,7 +122,7 @@ class PMProGateway_cryptopay extends PMProGateway
 
         if ('cryptopay' == $gateway && is_user_logged_in()) {
             ?>
-            <div id="PMProCryptoPayWrapper">
+            <div id="PMProCryptoPayWrapper" style="width:100%; text-align:center">
                 <?php
                     Hook::addFilter('lang', function ($lang) {
                         $lang['orderAmount'] = __('Level price:', 'pmpro-cryptopay');
