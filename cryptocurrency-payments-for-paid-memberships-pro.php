@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
 /**
  * Plugin Name: CryptoPay Gateway for Paid Memberships Pro
  * Requires Plugins: paid-memberships-pro, cryptopay-wc-lite
- * Version:     1.0.8
+ * Version:     1.0.9
  * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
  * Author:      BeycanPress LLC
@@ -22,7 +22,7 @@ defined('ABSPATH') || exit;
  * Text Domain: pmpro-cryptopay
  * Tags: CryptoPay, Cryptocurrency, Payments, PMPro, Bitcoin
  * Requires at least: 5.0
- * Tested up to: 6.6
+ * Tested up to: 6.7.1
  * Requires PHP: 8.1
  */
 
@@ -105,11 +105,13 @@ function pmpro_cryptopay_check_discount_code(object &$level, ?string $discountCo
 
 pmpro_cryptopay_addModels();
 
+add_action('init', function (): void {
+    load_plugin_textdomain('pmpro-cryptopay', false, basename(__DIR__) . '/languages');
+});
+
 add_action('plugins_loaded', function (): void {
 
     pmpro_cryptopay_addModels();
-
-    load_plugin_textdomain('pmpro-cryptopay', false, basename(__DIR__) . '/languages');
 
     if (false == defined('PMPRO_DIR')) {
         add_action('admin_notices', function (): void {

@@ -2,10 +2,10 @@
 Contributors: BeycanPress
 Tags: CryptoPay, Cryptocurrency, Payments, PMPro, Bitcoin
 Requires at least: 5.0
-Tested up to: 6.6
+Tested up to: 6.7.1
 Requires PHP: 8.1
-Stable Tag: 1.0.8
-Version: 1.0.8
+Stable Tag: 1.0.9
+Version: 1.0.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,6 +57,9 @@ You can easily translate with Loco translate.
 3. Enjoy.
 
 == Changelog ==
+
+= 1.0.9 =
+* Fixed: Text domain warning.
 
 = 1.0.7 =
 * Updated: Compatibility due to updates for new CryptoPay versions
