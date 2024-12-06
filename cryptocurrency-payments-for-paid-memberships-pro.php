@@ -11,8 +11,7 @@ defined('ABSPATH') || exit;
 
 /**
  * Plugin Name: CryptoPay Gateway for Paid Memberships Pro
- * Requires Plugins: paid-memberships-pro, cryptopay-wc-lite
- * Version:     1.1.0
+ * Version:     1.1.1
  * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
  * Author:      BeycanPress LLC
@@ -28,20 +27,12 @@ defined('ABSPATH') || exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use BeycanPress\CryptoPay\Loader;
 use BeycanPress\CryptoPay\PluginHero\Hook;
 use BeycanPress\CryptoPayLite\PluginHero\Hook as LiteHook;
 
 define('PMPRO_CRYPTOPAY_FILE', __FILE__);
 define('PMPRO_CRYPTOPAY_VERSION', '1.0.8');
 define('PMPRO_CRYPTOPAY_URL', plugin_dir_url(__FILE__));
-
-add_filter('wp_plugin_dependencies_slug', function ($slug) {
-    if ('cryptopay-wc-lite' === $slug && class_exists(Loader::class)) {
-        $slug = 'cryptopay';
-    }
-    return $slug;
-});
 
 register_activation_hook(PMPRO_CRYPTOPAY_FILE, function (): void {
     if (defined('CRYPTOPAY_LOADED')) {
@@ -142,7 +133,7 @@ add_action('plugins_loaded', function (): void {
     if (false == defined('PMPRO_DIR')) {
         add_action('admin_notices', function (): void {
             $class = 'notice notice-error';
-            $message = sprintf(esc_html__('CryptoPay Gateway for Paid Memberships Pro: This plugin is an extra feature plugin so it cannot do anything on its own. It needs Paid Memberships Pro to work. You can download Paid Memberships Pro by %s.', 'pmpro-cryptopay'), '<a href="https://wordpress.org/plugins/paid-memberships-pro/" target="_blank">' . esc_html__('clicking here', 'pmpro-cryptopay') . '</a>');
+            $message = sprintf(esc_html__('CryptoPay Gateway for Paid Memberships Pro: This plugin is an extra feature plugin so it cannot do anything on its own. It needs Paid Memberships Pro to work. You can download Paid Memberships Pro by %s.', 'pmpro-cryptopay'), '<a href="https://www.paidmembershipspro.com/" target="_blank">' . esc_html__('clicking here', 'pmpro-cryptopay') . '</a>');
             printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
         });
         return;

@@ -4,8 +4,8 @@ Tags: CryptoPay, Cryptocurrency, Payments, PMPro, Bitcoin
 Requires at least: 5.0
 Tested up to: 6.7.1
 Requires PHP: 8.1
-Stable Tag: 1.1.0
-Version: 1.1.0
+Stable Tag: 1.1.1
+Version: 1.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -27,7 +27,7 @@ Want to sell memberships with Paid Memberships Pro but your community is crypto-
 
 **<a href="https://beycanpress.com/cryptopay/?utm_source=wporg_readme&utm_medium=cryptopay_pmpro">Review CryptoPay Premium</a>**
 
-**<a href="https://wordpress.org/plugins/paid-memberships-pro/">Review Paid Memberships Pro</a>**
+**<a href="https://www.paidmembershipspro.com/">Review Paid Memberships Pro</a>**
 
 See CryptoPay  **<a href="https://cryptopay.beycanpress.net/membership-account/membership-checkout/?level=1" target="_blank">Demo</a>**
 
@@ -57,6 +57,8 @@ You can easily translate with Loco translate.
 3. Enjoy.
 
 == Changelog ==
+= 1.1.1 =
+* Removed: paid-memberships-pro dependency
 
 = 1.1.0 =
 * Added: User registration feature.
