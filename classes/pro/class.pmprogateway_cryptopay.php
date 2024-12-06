@@ -28,14 +28,6 @@ class PMProGateway_cryptopay extends PMProGateway
     public string $gateway;
 
     /**
-     * @param string $gateway
-     */
-    public function __construct(?string $gateway = null)
-    {
-        return parent::__construct($gateway);
-    }
-
-    /**
      * @return void
      */
     public static function init(): void
@@ -118,17 +110,20 @@ class PMProGateway_cryptopay extends PMProGateway
      */
     public static function pmpro_checkout(): void
     {
-        global $gateway, $pmpro_level, $discount_code;
+        global $gateway, $pmpro_level;
 
-        if ('cryptopay' == $gateway && is_user_logged_in()) {
+        if ('cryptopay' == $gateway) {
+            if (!is_user_logged_in()) {
+                self::showRegisterForm();
+            }
             ?>
             <div id="PMProCryptoPayWrapper" style="width:100%; text-align:center">
                 <?php
-                    Hook::addFilter('lang', function ($lang) {
-                        $lang['orderAmount'] = __('Level price:', 'pmpro-cryptopay');
-                        return $lang;
-                    });
-                    echo (new Payment('pmpro'))
+                Hook::addFilter('lang', function ($lang) {
+                    $lang['orderAmount'] = __('Level price:', 'pmpro-cryptopay');
+                    return $lang;
+                });
+                echo (new Payment('pmpro'))
                     ->setOrder(OrderType::fromArray([
                         'amount' => (float) $pmpro_level->initial_payment,
                         'currency' => strtoupper(pmpro_getOption('currency'))
@@ -137,18 +132,45 @@ class PMProGateway_cryptopay extends PMProGateway
                         'levelId' => (int) $pmpro_level->id
                     ]))
                     ->setAutoStart(false)
-                    ->html(loading:true);
+                    ->html(loading: true);
 
-                    self::pmpro_load_scripts();
+                self::pmpro_load_scripts();
                 ?>
             </div>
             <?php
-        } else {
-            $discount_code_link = !empty($discount_code) ? '&discount_code=' . $discount_code : '';
-            ?>
-            <span class="<?php echo esc_attr(pmpro_get_element_class('pmpro_checkout-h3-msg')); ?>"><?php esc_html_e('You have to login first for payment process?', 'paid-memberships-pro'); ?> <a href="<?php echo esc_url(wp_login_url(apply_filters('pmpro_checkout_login_redirect', pmpro_url("checkout", "?level=" . $pmpro_level->id . $discount_code_link)))); ?>"><?php esc_html_e('Log in here', 'paid-memberships-pro'); ?></a></span>
-            <?php
         }
+    }
+
+    /**
+     * @return void
+     */
+    public static function showRegisterForm(): void
+    {
+        ?>
+        <h3>
+            <?php
+                _e('Register', 'pmpro-cryptopay');
+            ?>
+        </h3>
+        <div id="loginform" style="width:100%">
+            <p class="register-email">
+                <label for="user_email" style="width:100%">
+                    <?php
+                        _e('Email', 'pmpro-cryptopay');
+                    ?>
+                </label>
+                <input type="text" id="user_email" class="input" style="width:100%">
+            </p>
+            <p class="register-password" style="width:100%">
+                <label for="user_pass">
+                    <?php
+                        _e('Password', 'pmpro-cryptopay');
+                    ?>
+                </label>
+                <input type="password" id="user_pass" spellcheck="false" class="input" style="width:100%">
+            </p>
+        </div>
+        <?php
     }
 
     /**
@@ -165,9 +187,12 @@ class PMProGateway_cryptopay extends PMProGateway
                 true
             );
             wp_localize_script('pmpro_cryptopay_main', 'PMProCryptoPay', [
+                'isLogged' => is_user_logged_in(),
                 'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('pmpro_cryptopay_use_discount'),
+                'nonce' => wp_create_nonce('pmpro_cryptopay'),
                 'lang' => [
+                    'emailExists' => __('This email is already registered.', 'pmpro-cryptopay'),
+                    'pleaseFill' => __('Please fill the form.', 'pmpro-cryptopay'),
                     'pleaseWait' => __('Please wait...', 'pmpro-cryptopay'),
                 ]
             ]);

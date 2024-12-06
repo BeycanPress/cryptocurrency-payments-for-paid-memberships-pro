@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
 /**
  * Plugin Name: CryptoPay Gateway for Paid Memberships Pro
  * Requires Plugins: paid-memberships-pro, cryptopay-wc-lite
- * Version:     1.0.9
+ * Version:     1.1.0
  * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
  * Author:      BeycanPress LLC
@@ -53,6 +53,32 @@ register_activation_hook(PMPRO_CRYPTOPAY_FILE, function (): void {
         (new PMPro_Transaction_Model_Lite())->createTable();
     }
 });
+
+/**
+ * @param string $userEmail
+ * @param string $userPass
+ * @return bool|WP_User
+ */
+function pmpro_cryptopay_registerAndLogin(string $userEmail, string $userPass): bool|WP_User
+{
+    $userId = wp_create_user($userEmail, $userPass, $userEmail);
+
+    if (is_wp_error($userId)) {
+        return false;
+    } else {
+        $user = wp_signon([
+            'user_login'    => $userEmail,
+            'user_password' => $userPass,
+            'remember'      => true,
+        ], false);
+
+        if (is_wp_error($user)) {
+            return false;
+        } else {
+            return $user;
+        }
+    }
+}
 
 /**
  * Add models to the plugin.

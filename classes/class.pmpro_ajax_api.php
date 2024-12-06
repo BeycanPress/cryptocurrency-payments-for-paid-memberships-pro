@@ -20,6 +20,8 @@ class PMPro_Ajax_Api
     {
         add_action('wp_ajax_pmpro_cryptopay_use_discount', [$this, 'pmpro_cryptopay_use_discount']);
         add_action('wp_ajax_nopriv_pmpro_cryptopay_use_discount', [$this, 'pmpro_cryptopay_use_discount']);
+        add_action('wp_ajax_pmpro_cryptopay_check_email', [$this, 'pmpro_cryptopay_check_email']);
+        add_action('wp_ajax_nopriv_pmpro_cryptopay_check_email', [$this, 'pmpro_cryptopay_check_email']);
     }
 
     /**
@@ -29,7 +31,7 @@ class PMPro_Ajax_Api
     {
         global $pmpro_levels;
 
-        check_ajax_referer('pmpro_cryptopay_use_discount', 'nonce');
+        check_ajax_referer('pmpro_cryptopay', 'nonce');
 
         $request = new Request();
         $levelId = $request->getParam('levelId');
@@ -58,6 +60,27 @@ class PMPro_Ajax_Api
         Response::success(null, [
             'amount' => floatval($discountPrice),
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function pmpro_cryptopay_check_email(): void
+    {
+        check_ajax_referer('pmpro_cryptopay', 'nonce');
+
+        $request = new Request();
+        $email = $request->getParam('email');
+
+        if (!is_email($email)) {
+            Response::error(esc_html__('Invalid email address!', 'pmpro-cryptopay'));
+        }
+
+        if (email_exists($email)) {
+            Response::error(esc_html__('Email address already exists!', 'pmpro-cryptopay'));
+        }
+
+        Response::success();
     }
 }
 

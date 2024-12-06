@@ -53,9 +53,16 @@ class PMPro_Register_Hooks_Lite
 
         Hook::addFilter('before_payment_started_pmpro', function (PaymentDataType $data): PaymentDataType {
             global $pmpro_levels;
-            $currentUser = wp_get_current_user();
+            $createUser = $data->getDynamicData()->get('createUser');
+
+            if ($createUser) {
+                $currentUser = pmpro_cryptopay_registerAndLogin($createUser->email, $createUser->password);
+            } else {
+                $currentUser = wp_get_current_user();
+            }
 
             $order = new \MemberOrder();
+            $data->setUserId($currentUser->ID);
             $level = $pmpro_levels[$data->getParams()->get('levelId')];
             pmpro_cryptopay_check_discount_code($level, $data->getParams()->get('discountCode'));
 
