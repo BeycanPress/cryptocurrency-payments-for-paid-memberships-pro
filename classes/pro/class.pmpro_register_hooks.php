@@ -25,20 +25,22 @@ class PMPro_Register_Hooks
         Helpers::registerIntegration('pmpro');
 
         if (is_admin()) {
-            new TransactionPage(
-                esc_html__('PMPro transactions', 'pmpro-cryptopay'),
-                'pmpro',
-                9,
-                [
-                    'orderId' => function ($tx) {
-                        if (!isset($tx->orderId)) {
-                            return esc_html__('Not found', 'pmpro-cryptopay');
-                        }
+            add_action('init', function (): void {
+                new TransactionPage(
+                    esc_html__('PMPro transactions', 'pmpro-cryptopay'),
+                    'pmpro',
+                    9,
+                    [
+                        'orderId' => function ($tx) {
+                            if (!isset($tx->orderId)) {
+                                return esc_html__('Not found', 'pmpro-cryptopay');
+                            }
 
-                        return '<a href="' . admin_url('admin.php?page=pmpro-orders&order=' . $tx->orderId) . '">' . $tx->orderId . '</a>';
-                    }
-                ]
-            );
+                            return '<a href="' . admin_url('admin.php?page=pmpro-orders&order=' . $tx->orderId) . '">' . $tx->orderId . '</a>';
+                        }
+                    ]
+                );
+            });
         }
 
         Hook::addFilter('init_pmpro', function (PaymentDataType $data) {

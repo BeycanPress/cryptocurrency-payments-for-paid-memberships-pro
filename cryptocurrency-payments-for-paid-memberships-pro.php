@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 
 /**
  * Plugin Name: CryptoPay Gateway for Paid Memberships Pro
- * Version:     1.1.1
+ * Version:     1.1.2
  * Plugin URI:  https://beycanpress.com/cryptopay/
  * Description: Adds CryptoPay as a gateway option for Paid Memberships Pro.
  * Author:      BeycanPress LLC
@@ -21,7 +21,7 @@ defined('ABSPATH') || exit;
  * Text Domain: pmpro-cryptopay
  * Tags: CryptoPay, Cryptocurrency, Payments, PMPro, Bitcoin
  * Requires at least: 5.0
- * Tested up to: 6.7.1
+ * Tested up to: 6.8
  * Requires PHP: 8.1
  */
 
@@ -31,7 +31,7 @@ use BeycanPress\CryptoPay\PluginHero\Hook;
 use BeycanPress\CryptoPayLite\PluginHero\Hook as LiteHook;
 
 define('PMPRO_CRYPTOPAY_FILE', __FILE__);
-define('PMPRO_CRYPTOPAY_VERSION', '1.0.8');
+define('PMPRO_CRYPTOPAY_VERSION', '1.1.2');
 define('PMPRO_CRYPTOPAY_URL', plugin_dir_url(__FILE__));
 
 register_activation_hook(PMPRO_CRYPTOPAY_FILE, function (): void {

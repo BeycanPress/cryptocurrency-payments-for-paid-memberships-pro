@@ -1,9 +1,8 @@
 /.git
 /.github
 /.wordpress-org
+.gitignore
 .distignore
 .gitattributes
-composer.json
-composer.lock
 phpcs.xml
 readme.md
